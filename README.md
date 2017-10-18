@@ -1,4 +1,4 @@
-# A pure HTML implementation of remarks
+# A zero-install, server-less implementation of remarks
 
 This is a zero-install, HTML-resident implementation of
 [remarks](https://github.com/DIKU-EDU/remarks). `remarks` was originally a DSL,
