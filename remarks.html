@@ -92,6 +92,14 @@ if (remarks_elem.children.length === 0) {
   appendSection(remarks_elem, 1);
 }
 
+function getFilename() {
+  var parts = document.location.href.split("?")[0].split("/");
+  var last = parts[parts.length - 1];
+  return last.split(".html")[0];
+}
+
+document.title = getFilename();
+
 </script>
 </body>
 </html>
