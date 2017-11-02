@@ -114,6 +114,33 @@ function goRight(row, elem) {
   }
 }
 
+function goUp(row, elem) {
+  var row_elem = byId(row);
+  var prev = row_elem.previousSibling;
+  if (prev != null) {
+    var parentNode = row_elem.parentNode;
+    parentNode.removeChild(row_elem);
+    parentNode.insertBefore(row_elem, prev); 
+    elem.focus();
+  }
+}
+
+function goDown(row, elem) {
+  var row_elem = byId(row);
+  var next = row_elem.nextSibling;
+  if (next != null) {
+    var parentNode = row_elem.parentNode;
+    parentNode.removeChild(row_elem);
+    nextnext = next.nextSibling;
+    if (nextnext != null) {
+      parentNode.insertBefore(row_elem, nextnext); 
+    } else {
+      parentNode.appendChild(row_elem);
+    }
+    elem.focus();
+  }
+}
+
 var ctrl_pressed = null;
 
 function handleKeydown(row, e, elem) {
@@ -127,7 +154,12 @@ function handleKeydown(row, e, elem) {
     ctrl_pressed = elem;
   } else if (ctrl_pressed === elem && e.key == "ArrowRight") {
     goRight(row, elem);
+  } else if (ctrl_pressed === elem && e.key == "ArrowUp") {
+    goUp(row, elem);
+  } else if (ctrl_pressed === elem && e.key == "ArrowDown") {
+    goDown(row, elem);
   }
+
 }
 
 function handleKeyup(e, elem) {
