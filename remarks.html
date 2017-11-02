@@ -63,11 +63,14 @@ function appendMood(container) {
   container.appendChild(span);
 }
 
-function handleKeydown(container, prev, e) {
+function handleKeydown(row, e, elem) {
+  console.log(e.code);
   if (e.code === "Enter") {
-    var container_elem = byId(container);
-    var prev_elem = byId(prev);
-    appendJudgement(container_elem, prev_elem);
+    var row_elem = byId(row);
+    appendJudgement(row_elem.parentNode, row_elem);
+  } else if (e.code == "Backspace" && elem.value == "") {
+    var row_elem = byId(row);
+    row_elem.parentNode.removeChild(row_elem);
   }
 }
 
@@ -82,8 +85,7 @@ function appendJudgement(container, prev) {
   input = appendTextInput(text);
 
   input.setAttribute("onkeydown",
-    "handleKeydown(\"" + container.id +
-      "\", \"" + row.id + "\", event);");
+    "handleKeydown(\"" + row.id + "\", event, this);");
 
   row.appendChild(mood);
   row.appendChild(text);
