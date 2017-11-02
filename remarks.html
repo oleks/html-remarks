@@ -203,6 +203,14 @@ function judgementKeydown(row, e, elem) {
   }
 }
 
+function sectionKeydown(section, e, elem) {
+  if (e.code === "Enter") {
+    var section_elem = byId(section);
+    var depth = parseInt(section_elem.children[0].tagName.substring(1), 10);
+    appendSection(section_elem.parentNode, depth);
+  }
+}
+
 function handleKeyup(e, elem) {
   if (ctrl_pressed === elem && e.key == "Control") {
     ctrl_pressed = null;
@@ -238,9 +246,14 @@ function appendJudgements(container) {
 
 function appendSection(container, depth) {
   var section = document.createElement("section");
+  section.id = gen("s");
 
   var header = document.createElement("h" + depth);
-  appendTextInput(header);
+
+  var input = appendTextInput(header);
+  input.setAttribute("onkeydown",
+    "sectionKeydown(\"" + section.id + "\", event, this);");
+
   section.appendChild(header);
 
   appendJudgement(appendJudgements(section));
