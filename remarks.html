@@ -198,7 +198,7 @@ function appendJudgement(container, prev) {
 
   appendMood(row);
 
-  input = appendTextInput(row);
+  var input = appendTextInput(row);
   input.setAttribute("onkeydown",
     "judgementKeydown(\"" + row.id + "\", event, this);");
   input.setAttribute("onkeyup",
