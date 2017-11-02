@@ -24,9 +24,15 @@ function gen(id) {
   return id + (next[id]++).toString(10);
 }
 
+function setValue(elem) {
+  elem.setAttribute("value", elem.value);
+}
+
 function appendTextInput(container) {
   var input = document.createElement("input");
   input.setAttribute("type", "text");
+  input.setAttribute("onchange", "setValue(this);");
+
   container.appendChild(input);
 
   return input;
