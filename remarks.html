@@ -5,6 +5,13 @@
 <style type="text/css">
 .mood {
   cursor: pointer; cursor: hand; font-family: monospace;
+  padding: 0 0.5em;
+}
+ol li {
+  list-style-type: none;
+}
+ol {
+  padding: 0;
 }
 </style>
 </head>
@@ -75,20 +82,15 @@ function handleKeydown(row, e, elem) {
 }
 
 function appendJudgement(container, prev) {
-  var row = document.createElement("tr");
+  var row = document.createElement("li");
   row.id = gen("j");
 
-  var mood = document.createElement("td");
-  appendMood(mood);
+  appendMood(row);
 
-  var text = document.createElement("td");
-  input = appendTextInput(text);
-
+  input = appendTextInput(row);
   input.setAttribute("onkeydown",
     "handleKeydown(\"" + row.id + "\", event, this);");
 
-  row.appendChild(mood);
-  row.appendChild(text);
   if (prev === undefined || prev === null) {
     container.appendChild(row);
   } else {
@@ -104,12 +106,10 @@ function appendSection(container, depth) {
   appendTextInput(header);
   section.appendChild(header);
 
-  var table = document.createElement("table");
-  var tbody = document.createElement("tbody");
-  tbody.id = gen("t");
-  appendJudgement(tbody);
-  table.appendChild(tbody);
-  section.appendChild(table);
+  var judgements = document.createElement("ol");
+  judgements.id = gen("t");
+  appendJudgement(judgements);
+  section.appendChild(judgements);
 
   container.appendChild(section);
 }
