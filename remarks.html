@@ -28,6 +28,23 @@ function setValue(elem) {
   elem.setAttribute("value", elem.value);
 }
 
+function changeMood(elem) {
+  var current_mood = elem.innerText;
+  var next_mood = "*";
+  switch (current_mood) {
+  case "*":
+    next_mood = "+";
+    break;
+  case "+":
+    next_mood = "-";
+    break;
+  case "-":
+    next_mood = "?";
+    break;
+  }
+  elem.innerText = next_mood;
+}
+
 function appendTextInput(container) {
   var input = document.createElement("input");
   input.setAttribute("type", "text");
@@ -41,7 +58,8 @@ function appendTextInput(container) {
 function appendMood(container) {
   var span = document.createElement("span");
   span.className = "mood";
-  span.innerHTML = "*";
+  span.innerText = "*";
+  span.setAttribute("onclick", "changeMood(this);");
   container.appendChild(span);
 }
 
