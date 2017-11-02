@@ -46,7 +46,7 @@ function setValue(elem) {
   elem.setAttribute("value", elem.value);
 }
 
-function changeMood(elem) {
+function toggleMood(elem) {
   var current_mood = elem.innerText;
   var next_mood = "*";
   switch (current_mood) {
@@ -78,7 +78,7 @@ function appendMood(container) {
   var span = document.createElement("span");
   span.className = "mood";
   span.innerText = "*";
-  span.setAttribute("onclick", "changeMood(this);");
+  span.setAttribute("onclick", "toggleMood(this);");
   container.appendChild(span);
 }
 
@@ -174,7 +174,7 @@ function judgementKeydown(row, e, elem) {
   } else if (e.key == "Control") {
     ctrl_pressed = elem;
   } else if (ctrl_pressed === elem && e.code == "Space") {
-    changeMood(elem.previousSibling);
+    toggleMood(elem.previousSibling);
   } else if (ctrl_pressed === elem && e.key == "ArrowRight") {
     goRight(row, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowLeft") {
