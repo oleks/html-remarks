@@ -164,7 +164,7 @@ function goDown(row, elem) {
 
 var ctrl_pressed = null;
 
-function handleKeydown(row, e, elem) {
+function judgementKeydown(row, e, elem) {
   if (e.code === "Enter") {
     var row_elem = byId(row);
     appendJudgement(row_elem.parentNode, row_elem);
@@ -198,7 +198,7 @@ function appendJudgement(container, prev) {
 
   input = appendTextInput(row);
   input.setAttribute("onkeydown",
-    "handleKeydown(\"" + row.id + "\", event, this);");
+    "judgementKeydown(\"" + row.id + "\", event, this);");
   input.setAttribute("onkeyup",
     "handleKeyup(event, this);");
 
