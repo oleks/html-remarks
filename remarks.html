@@ -79,6 +79,42 @@ function appendMood(container) {
   container.appendChild(span);
 }
 
+function removeAllChildren(elem) {
+  for (var i = 0; i < elem.children.length; i++) {
+    console.log(elem.children[0]);
+    elem.removeChild(elem.children[0]);
+  }
+}
+
+function findJudgements(elem) {
+  for (var i = 0; i < elem.children.length; i++) {
+    if (elem.children[i].tagName == "ol") {
+      return elem.children[i]; 
+    }
+  }
+  return null;
+}
+
+function getJudgements(elem) {
+  var judgements = findJudgements(elem);
+  if (judgements == null) {
+    judgements = appendJudgements(elem);
+  }
+  return judgements;
+}
+
+function goRight(row, elem) {
+  var row_elem = byId(row);
+  if (row_elem.previousSibling != null) {
+    var judgements = getJudgements(row_elem.previousSibling);
+    row_elem.parentNode.removeChild(row_elem);
+    judgements.appendChild(row_elem);
+    elem.focus();
+  }
+}
+
+var ctrl_pressed = null;
+
 function handleKeydown(row, e, elem) {
   if (e.code === "Enter") {
     var row_elem = byId(row);
@@ -86,6 +122,16 @@ function handleKeydown(row, e, elem) {
   } else if (e.code == "Backspace" && elem.value == "") {
     var row_elem = byId(row);
     row_elem.parentNode.removeChild(row_elem);
+  } else if (e.key == "Control") {
+    ctrl_pressed = elem;
+  } else if (ctrl_pressed === elem && e.key == "ArrowRight") {
+    goRight(row, elem);
+  }
+}
+
+function handleKeyup(e, elem) {
+  if (ctrl_pressed === elem && e.key == "Control") {
+    ctrl_pressed = null;
   }
 }
 
@@ -98,6 +144,8 @@ function appendJudgement(container, prev) {
   input = appendTextInput(row);
   input.setAttribute("onkeydown",
     "handleKeydown(\"" + row.id + "\", event, this);");
+  input.setAttribute("onkeyup",
+    "handleKeyup(event, this);");
 
   if (prev === undefined || prev === null) {
     container.appendChild(row);
@@ -107,6 +155,13 @@ function appendJudgement(container, prev) {
   input.focus();
 }
 
+function appendJudgements(container) {
+  var judgements = document.createElement("ol");
+  judgements.id = gen("t");
+  container.appendChild(judgements);
+  return judgements;
+}
+
 function appendSection(container, depth) {
   var section = document.createElement("section");
 
@@ -114,10 +169,7 @@ function appendSection(container, depth) {
   appendTextInput(header);
   section.appendChild(header);
 
-  var judgements = document.createElement("ol");
-  judgements.id = gen("t");
-  appendJudgement(judgements);
-  section.appendChild(judgements);
+  appendJudgement(appendJudgements(section));
 
   container.appendChild(section);
 }
