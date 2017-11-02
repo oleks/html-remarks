@@ -80,7 +80,6 @@ function appendMood(container) {
 }
 
 function handleKeydown(row, e, elem) {
-  console.log(e.code);
   if (e.code === "Enter") {
     var row_elem = byId(row);
     appendJudgement(row_elem.parentNode, row_elem);
