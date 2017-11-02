@@ -173,6 +173,8 @@ function judgementKeydown(row, e, elem) {
     row_elem.parentNode.removeChild(row_elem);
   } else if (e.key == "Control") {
     ctrl_pressed = elem;
+  } else if (ctrl_pressed === elem && e.code == "Space") {
+    changeMood(elem.previousSibling);
   } else if (ctrl_pressed === elem && e.key == "ArrowRight") {
     goRight(row, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowLeft") {
