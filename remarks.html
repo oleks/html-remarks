@@ -109,7 +109,7 @@ function getRemarks(elem) {
   return remarks;
 }
 
-function goRight(row, elem) {
+function indentRemark(row, elem) {
   var row_elem = byId(row);
   if (row_elem.previousSibling != null) {
     var remarks = getRemarks(row_elem.previousSibling);
@@ -119,7 +119,7 @@ function goRight(row, elem) {
   }
 }
 
-function goLeft(row, elem) { 
+function unindentRemark(row, elem) { 
   var row_elem = byId(row);
   if (row_elem.parentNode &&
       row_elem.parentNode.parentNode &&
@@ -138,7 +138,7 @@ function goLeft(row, elem) {
   }
 }
 
-function goUp(row, elem) {
+function moveRemarkUp(row, elem) {
   var row_elem = byId(row);
   var prev = row_elem.previousSibling;
   if (prev != null) {
@@ -149,7 +149,7 @@ function goUp(row, elem) {
   }
 }
 
-function goDown(row, elem) {
+function moveRemarkDown(row, elem) {
   var row_elem = byId(row);
   var next = row_elem.nextSibling;
   if (next != null) {
@@ -196,13 +196,13 @@ function remarkKeydown(row, e, elem) {
   } else if (ctrl_pressed === elem && e.code == "Space") {
     toggleMood(elem.previousSibling);
   } else if (ctrl_pressed === elem && e.key == "ArrowRight") {
-    goRight(row, elem);
+    indentRemark(row, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowLeft") {
-    goLeft(row, elem);
+    unindentRemark(row, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowUp") {
-    goUp(row, elem);
+    moveRemarkUp(row, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowDown") {
-    goDown(row, elem);
+    moveRemarkDown(row, elem);
   }
 }
 
