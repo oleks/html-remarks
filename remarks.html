@@ -92,7 +92,7 @@ function removeAllChildren(elem) {
   }
 }
 
-function findJudgements(elem) {
+function findRemarks(elem) {
   for (var i = 0; i < elem.children.length; i++) {
     if (elem.children[i].tagName == "OL") {
       return elem.children[i]; 
@@ -101,20 +101,20 @@ function findJudgements(elem) {
   return null;
 }
 
-function getJudgements(elem) {
-  var judgements = findJudgements(elem);
-  if (judgements == null) {
-    judgements = appendJudgements(elem);
+function getRemarks(elem) {
+  var remarks = findRemarks(elem);
+  if (remarks == null) {
+    remarks = appendRemarks(elem);
   }
-  return judgements;
+  return remarks;
 }
 
 function goRight(row, elem) {
   var row_elem = byId(row);
   if (row_elem.previousSibling != null) {
-    var judgements = getJudgements(row_elem.previousSibling);
+    var remarks = getRemarks(row_elem.previousSibling);
     row_elem.parentNode.removeChild(row_elem);
-    judgements.appendChild(row_elem);
+    remarks.appendChild(row_elem);
     elem.focus();
   }
 }
@@ -165,7 +165,7 @@ function goDown(row, elem) {
   }
 }
 
-function tryRemoveJudgement(row, elem) {
+function tryRemoveRemark(row, elem) {
   if (elem.value != "") {
     return;
   }
@@ -185,12 +185,12 @@ function tryRemoveJudgement(row, elem) {
 
 var ctrl_pressed = null;
 
-function judgementKeydown(row, e, elem) {
+function remarkKeydown(row, e, elem) {
   if (e.code === "Enter") {
     var row_elem = byId(row);
-    appendJudgement(row_elem.parentNode, row_elem);
+    appendRemark(row_elem.parentNode, row_elem);
   } else if (e.code == "Backspace") {
-    tryRemoveJudgement(row, elem);
+    tryRemoveRemark(row, elem);
   } else if (e.key == "Control") {
     ctrl_pressed = elem;
   } else if (ctrl_pressed === elem && e.code == "Space") {
@@ -220,7 +220,7 @@ function handleKeyup(e, elem) {
   }
 }
 
-function appendJudgement(container, prev) {
+function appendRemark(container, prev) {
   var row = document.createElement("li");
   row.id = gen("j");
 
@@ -228,7 +228,7 @@ function appendJudgement(container, prev) {
 
   var input = appendTextInput(row);
   input.setAttribute("onkeydown",
-    "judgementKeydown(\"" + row.id + "\", event, this);");
+    "remarkKeydown(\"" + row.id + "\", event, this);");
   input.setAttribute("onkeyup",
     "handleKeyup(event, this);");
 
@@ -240,11 +240,11 @@ function appendJudgement(container, prev) {
   input.focus();
 }
 
-function appendJudgements(container) {
-  var judgements = document.createElement("ol");
-  judgements.id = gen("t");
-  container.appendChild(judgements);
-  return judgements;
+function appendRemarks(container) {
+  var remarks = document.createElement("ol");
+  remarks.id = gen("t");
+  container.appendChild(remarks);
+  return remarks;
 }
 
 function appendSection(container, depth) {
@@ -263,7 +263,7 @@ function appendSection(container, depth) {
 
   section.appendChild(header);
 
-  appendJudgement(appendJudgements(section));
+  appendRemark(appendRemarks(section));
 
   container.appendChild(section);
   input.focus();
