@@ -17,6 +17,9 @@ input {
   font-size: 1.5em;
   font-family: monospace;
 }
+h1 span {
+  padding-right: 0.3em;
+}
 ol li {
   list-style-type: none;
 }
@@ -249,6 +252,10 @@ function appendSection(container, depth) {
   section.id = gen("s");
 
   var header = document.createElement("h" + depth);
+
+  var span = document.createElement("span");
+  span.innerText = Array(depth + 1).join("#");
+  header.appendChild(span);
 
   var input = appendTextInput(header);
   input.setAttribute("onkeydown",
