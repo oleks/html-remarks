@@ -17,7 +17,7 @@ input {
   font-size: 1.5em;
   font-family: monospace;
 }
-h1 span {
+h1 span, h2 span, h3 span, h4 span {
   padding-right: 0.3em;
 }
 ol li {
@@ -206,11 +206,61 @@ function remarkKeydown(row, e, elem) {
   }
 }
 
+function findJudgements(elem) {
+  for (var i = 0; i < elem.children.length; i++) {
+    if (elem.children[i].tagName == "SECTION") {
+      return elem.children[i];
+    }
+  }
+  return null;
+}
+
+function getJudgements(elem) {
+  var judgements = findJugements(elem);
+  if (judgements == null) {
+    judgements = appendRemarks(elem);
+  }
+  return judgements;
+}
+
+function indentJudgementElem(judgement_elem, elem) {
+  if (judgement_elem.previousSibling === null) {
+    return;
+  }
+
+  var sibling = judgement_elem.previousSibling;
+
+  if (sibling.tagName !== "SECTION") {
+    return;
+  }
+
+  judgement_elem.parentNode.removeChild(judgement_elem);
+  sibling.appendChild(judgement_elem);
+  var depth = parseInt(judgement_elem.children[0].tagName.substring(1), 10);
+
+  if (depth === 3) {
+    return;
+  }
+
+  var jh = createJudgementHeader(judgement_elem.id, depth + 1, elem);
+  judgement_elem.removeChild(judgement_elem.children[0]);
+  judgement_elem.insertBefore(jh.header, judgement_elem.children[0]);
+}
+
+function indentJudgement(judgement, elem) {
+  indentJudgementElem(byId(judgement), elem);
+  elem.focus();
+}
+
 function sectionKeydown(section, e, elem) {
   if (e.code === "Enter") {
     var section_elem = byId(section);
     var depth = parseInt(section_elem.children[0].tagName.substring(1), 10);
     appendSection(section_elem.parentNode, depth);
+  } else if (e.key == "Control") {
+    ctrl_pressed = elem;
+  } else if (ctrl_pressed === elem && e.key == "ArrowRight") {
+    indentJudgement(section, elem);
   }
 }
 
@@ -247,26 +297,36 @@ function appendRemarks(container) {
   return remarks;
 }
 
-function appendSection(container, depth) {
-  var section = document.createElement("section");
-  section.id = gen("s");
-
+function createJudgementHeader(section_id, depth, input) {
   var header = document.createElement("h" + depth);
 
   var span = document.createElement("span");
   span.innerText = Array(depth + 1).join("#");
   header.appendChild(span);
 
-  var input = appendTextInput(header);
-  input.setAttribute("onkeydown",
-    "sectionKeydown(\"" + section.id + "\", event, this);");
+  if (input === undefined) {
+    input = appendTextInput(header);
+    input.setAttribute("onkeydown",
+      "sectionKeydown(\"" + section_id + "\", event, this);");
+  } else {
+    header.appendChild(input);
+  }
 
-  section.appendChild(header);
+  return { header:header, input:input };
+}
+
+function appendSection(container, depth) {
+  var section = document.createElement("section");
+  section.id = gen("s");
+
+  var jh = createJudgementHeader(section.id, depth);
+
+  section.appendChild(jh.header);
 
   appendRemark(appendRemarks(section));
 
   container.appendChild(section);
-  input.focus();
+  jh.input.focus();
 }
 
 if (remarks_elem.children.length === 0) {
