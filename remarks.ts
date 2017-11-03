@@ -3,7 +3,7 @@ function byId(id: string): Element {
 }
 
 function toggleMoodText(current_mood: string): string {
-  var next_mood = "*";
+  var next_mood: string;
   switch (current_mood) {
   case "*":
     next_mood = "+";
