@@ -252,6 +252,35 @@ function indentJudgement(judgement, elem) {
   elem.focus();
 }
 
+function unindentJudgementElem(judgement_elem, elem) {
+  var depth = parseInt(judgement_elem.children[0].tagName.substring(1), 10);
+  if (depth === 1) {
+    return;
+  }
+
+  var parentJudgement = judgement_elem.parentNode;
+  var grandParent = parentJudgement.parentNode;
+  var nextSibling = parentJudgement.nextSibling;
+
+  parentJudgement.removeChild(judgement_elem);
+  if (nextSibling === null) {
+    grandParent.appendChild(judgement_elem);
+  } else {
+    grandParent.insertBefore(nextSibling);
+  }
+
+  var jh = createJudgementHeader(judgement_elem.id, depth - 1, elem);
+  judgement_elem.removeChild(judgement_elem.children[0]);
+  judgement_elem.insertBefore(jh.header, judgement_elem.children[0]);
+}
+
+
+function unindentJudgement(judgement, elem) {
+  unindentJudgementElem(byId(judgement), elem);
+  elem.focus();
+}
+
+
 function sectionKeydown(section, e, elem) {
   if (e.code === "Enter") {
     var section_elem = byId(section);
@@ -261,6 +290,8 @@ function sectionKeydown(section, e, elem) {
     ctrl_pressed = elem;
   } else if (ctrl_pressed === elem && e.key == "ArrowRight") {
     indentJudgement(section, elem);
+  } else if (ctrl_pressed === elem && e.key == "ArrowLeft") {
+    unindentJudgement(section, elem);
   }
 }
 
