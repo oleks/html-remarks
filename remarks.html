@@ -206,21 +206,33 @@ function remarkKeydown(row, e, elem) {
   }
 }
 
-function findJudgements(elem) {
-  for (var i = 0; i < elem.children.length; i++) {
-    if (elem.children[i].tagName == "SECTION") {
-      return elem.children[i];
-    }
+function lastChild(elem) {
+  if (elem.children.length === 0) {
+    return null;
+  } else {
+    return elem.children[elem.children.length - 1];
   }
-  return null;
+}
+
+function findJudgements(elem) {
+  var candidate = lastChild(elem);
+  if (candidate.tagName === "DIV") {
+    return candidate;
+  } else {
+    return null;
+  }
 }
 
 function getJudgements(elem) {
-  var judgements = findJugements(elem);
-  if (judgements == null) {
-    judgements = appendRemarks(elem);
+  var judgements = findJudgements(elem);
+  if (judgements === null) {
+    judgements = appendJudgements(elem);
   }
   return judgements;
+}
+
+function detach(elem) {
+  elem.parentNode.removeChild(elem);
 }
 
 function indentJudgementElem(judgement_elem, elem) {
@@ -234,8 +246,9 @@ function indentJudgementElem(judgement_elem, elem) {
     return;
   }
 
-  judgement_elem.parentNode.removeChild(judgement_elem);
-  sibling.appendChild(judgement_elem);
+  var judgements = getJudgements(sibling);
+  detach(judgement_elem);
+  judgements.appendChild(judgement_elem);
   var depth = parseInt(judgement_elem.children[0].tagName.substring(1), 10);
 
   if (depth === 3) {
@@ -258,11 +271,15 @@ function unindentJudgementElem(judgement_elem, elem) {
     return;
   }
 
-  var parentJudgement = judgement_elem.parentNode;
+  var container = judgement_elem.parentNode;
+  var parentJudgement = container.parentNode;
   var grandParent = parentJudgement.parentNode;
   var nextSibling = parentJudgement.nextSibling;
 
-  parentJudgement.removeChild(judgement_elem);
+  detach(judgement_elem);
+  if (container.children.length === 0) {
+    detach(container);
+  }
   if (nextSibling === null) {
     grandParent.appendChild(judgement_elem);
   } else {
@@ -330,6 +347,13 @@ function appendRemarks(container) {
   remarks.id = gen("t");
   container.appendChild(remarks);
   return remarks;
+}
+
+function appendJudgements(container) {
+  var judgements = document.createElement("div");
+  judgements.className = "js";
+  container.appendChild(judgements);
+  return judgements;
 }
 
 function createJudgementHeader(section_id, depth, input) {
