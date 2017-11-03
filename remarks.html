@@ -138,7 +138,7 @@ function unindentRemark(row, elem) {
   }
 }
 
-function moveRemarkUp(row, elem) {
+function moveUp(row, elem) {
   var row_elem = byId(row);
   var prev = row_elem.previousSibling;
   if (prev != null) {
@@ -149,7 +149,7 @@ function moveRemarkUp(row, elem) {
   }
 }
 
-function moveRemarkDown(row, elem) {
+function moveDown(row, elem) {
   var row_elem = byId(row);
   var next = row_elem.nextSibling;
   if (next != null) {
@@ -200,9 +200,9 @@ function remarkKeydown(row, e, elem) {
   } else if (ctrl_pressed === elem && e.key == "ArrowLeft") {
     unindentRemark(row, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowUp") {
-    moveRemarkUp(row, elem);
+    moveUp(row, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowDown") {
-    moveRemarkDown(row, elem);
+    moveDown(row, elem);
   }
 }
 
@@ -292,6 +292,10 @@ function sectionKeydown(section, e, elem) {
     indentJudgement(section, elem);
   } else if (ctrl_pressed === elem && e.key == "ArrowLeft") {
     unindentJudgement(section, elem);
+  } else if (ctrl_pressed === elem && e.key == "ArrowUp") {
+    moveUp(section, elem);
+  } else if (ctrl_pressed === elem && e.key == "ArrowDown") {
+    moveDown(section, elem);
   }
 }
 
