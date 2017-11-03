@@ -95,7 +95,7 @@ function removeAllChildren(elem) {
 function findRemarks(elem) {
   for (var i = 0; i < elem.children.length; i++) {
     if (elem.children[i].tagName == "OL") {
-      return elem.children[i]; 
+      return elem.children[i];
     }
   }
   return null;
@@ -119,7 +119,7 @@ function indentRemark(row, elem) {
   }
 }
 
-function unindentRemark(row, elem) { 
+function unindentRemark(row, elem) {
   var row_elem = byId(row);
   if (row_elem.parentNode &&
       row_elem.parentNode.parentNode &&
@@ -144,7 +144,7 @@ function moveRemarkUp(row, elem) {
   if (prev != null) {
     var parentNode = row_elem.parentNode;
     parentNode.removeChild(row_elem);
-    parentNode.insertBefore(row_elem, prev); 
+    parentNode.insertBefore(row_elem, prev);
     elem.focus();
   }
 }
@@ -157,7 +157,7 @@ function moveRemarkDown(row, elem) {
     parentNode.removeChild(row_elem);
     nextnext = next.nextSibling;
     if (nextnext != null) {
-      parentNode.insertBefore(row_elem, nextnext); 
+      parentNode.insertBefore(row_elem, nextnext);
     } else {
       parentNode.appendChild(row_elem);
     }
