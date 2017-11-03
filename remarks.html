@@ -127,7 +127,7 @@ function unindentRemark(row, elem) {
     var new_next = row_elem.parentNode.parentNode.nextSibling;
     var new_parent = row_elem.parentNode.parentNode.parentNode;
     if (new_parent.tagName == "OL") {
-      row_elem.parentNode.removeChild(row_elem);
+      detach2(row_elem);
       if (new_next != null) {
         new_parent.insertBefore(row_elem, new_next);
       } else {
@@ -235,6 +235,14 @@ function detach(elem) {
   elem.parentNode.removeChild(elem);
 }
 
+function detach2(elem) {
+  var parentNode = elem.parentNode;
+  detach(elem);
+  if (parentNode.children.length === 0) {
+    detach(parentNode);
+  }
+}
+
 function indentJudgementElem(judgement_elem, elem) {
   if (judgement_elem.previousSibling === null) {
     return;
@@ -276,10 +284,7 @@ function unindentJudgementElem(judgement_elem, elem) {
   var grandParent = parentJudgement.parentNode;
   var nextSibling = parentJudgement.nextSibling;
 
-  detach(judgement_elem);
-  if (container.children.length === 0) {
-    detach(container);
-  }
+  detach2(judgement_elem);
   if (nextSibling === null) {
     grandParent.appendChild(judgement_elem);
   } else {
