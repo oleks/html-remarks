@@ -204,21 +204,54 @@ function appendJudgements(container: Element) : HTMLDivElement {
   return appendElement(htmlDiv, container);
 }
 
-function appendJudgementAfter(judgement_id: string): void {
-  let judgement = byId(judgement_id);
+function appendJudgementAfter(judgement: HTMLElement): void {
   let depth = parseInt(judgement.children[0].tagName.substring(1), 10);
   let parent = judgement.parentNode! as HTMLElement;
   appendJudgement(parent, depth);
+}
+
+function moveUp(
+    elem: HTMLElement,
+    focus: HTMLElement): void {
+  let prev = elem.previousSibling;
+  if (prev) {
+    let container = elem.parentNode!;
+    container.removeChild(elem);
+    container.insertBefore(elem, prev);
+    focus.focus();
+  }
+}
+
+function moveDown(
+    elem: HTMLElement,
+    focus: HTMLElement): void {
+  var next = elem.nextSibling;
+  if (next) {
+    let container = elem.parentNode!;
+    container.removeChild(elem);
+    let nextnext = next.nextSibling;
+    if (nextnext) {
+      container.insertBefore(elem, nextnext);
+    } else {
+      container.appendChild(elem);
+    }
+    focus.focus();
+  }
 }
 
 function judgementKeydown(
     judgement_id: string,
     e: KeyboardEvent,
     elem: HTMLElement): void {
+  let judgement = byId(judgement_id);
   if (e.code === "Enter") {
-    appendJudgementAfter(judgement_id);
+    appendJudgementAfter(judgement);
   } else if (e.key === "Control") {
     ctrl = elem;
+  } else if (ctrl === elem && e.key === "ArrowUp") {
+    moveUp(judgement, elem);
+  } else if (ctrl === elem && e.key === "ArrowDown") {
+    moveDown(judgement, elem);
   }
   elem = elem;
 }
