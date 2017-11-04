@@ -1,3 +1,5 @@
+.PHONY: all clean
+
 CPPFLAGS=-Werror \
 	-Wall \
 	-pedantic
