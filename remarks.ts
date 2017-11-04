@@ -38,6 +38,10 @@ class Guid {
   }
 }
 
+function htmlSection(): HTMLElement {
+  return document.createElement("section");
+}
+
 function htmlSpan(): HTMLSpanElement {
   return document.createElement("span");
 }
@@ -139,9 +143,8 @@ function createJudgementHeader(
     depth: number): TextContainer {
   let header = document.createElement("h" + depth);
 
-  let span = document.createElement("span");
+  let span = appendElement(htmlSpan, header);
   span.innerText = repeatString("#", depth);
-  header.appendChild(span);
 
   let input = appendTextInput(header);
 
@@ -151,7 +154,7 @@ function createJudgementHeader(
 function appendJudgement(
     container: Element,
     depth: number): void {
-  let section = document.createElement("section");
+  let section = appendElement(htmlSection, container);
   section.id = Guid.next();
 
   let header = createJudgementHeader(depth);
