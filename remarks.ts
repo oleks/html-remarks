@@ -62,6 +62,19 @@ function appendElement<T extends HTMLElement>(
   return element;
 }
 
+function insertElementAfter<T extends HTMLElement>(
+    c: () => T,
+    container: Element,
+    prev?: Element): T {
+  let element = c();
+  if (prev && prev.nextSibling) {
+    container.insertBefore(element, prev.nextSibling);
+  } else {
+    container.appendChild(element);
+  }
+  return element;
+}
+
 function setValue(
     input: HTMLInputElement): void {
   input.setAttribute("value", input.value);
@@ -74,19 +87,6 @@ function appendTextInput(
   input.setAttribute("onchange", "setValue(this);");
 
   return input;
-}
-
-function insertElementAfter(
-    tagName: string,
-    container: Element,
-    prev?: Element): Element {
-  let element = document.createElement(tagName);
-  if (prev && prev.nextSibling) {
-    container.insertBefore(element, prev.nextSibling);
-  } else {
-    container.appendChild(element);
-  }
-  return element;
 }
 
 function appendRemarks(
@@ -105,7 +105,7 @@ function appendMood(
 function appendRemark(
     container: Element,
     prev?: Element) {
-  let remark = insertElementAfter("li", container, prev);
+  let remark = insertElementAfter(htmlLI, container, prev);
   remark.id = Guid.next();
 
   appendMood(remark);
