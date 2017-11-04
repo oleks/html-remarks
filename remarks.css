@@ -5,6 +5,7 @@ html input {
 input {
   border: 0;
   border-bottom: 1px solid gray;
+  width: 100%;
 }
 .mood {
   cursor: pointer; cursor: hand;
@@ -14,9 +15,16 @@ input {
 }
 h1 span, h2 span, h3 span, h4 span {
   padding-right: 0.3em;
+  display: table-cell;
+}
+.fill {
+  width: 100%;
 }
 ol li {
   list-style-type: none;
+}
+ol li span {
+  display: table-cell;
 }
 ol {
   padding: 0;

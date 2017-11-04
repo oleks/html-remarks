@@ -123,7 +123,8 @@ class Remark extends TextField {
 
   constructor(
       public readonly element: HTMLLIElement) {
-    super(element.children[1]! as HTMLInputElement);
+    super((element.children[1]! as HTMLSpanElement).
+      children[0]! as HTMLInputElement);
   }
 
   tryRemove(e: KeyboardEvent): void {
@@ -179,8 +180,9 @@ class Judgement extends TextField {
 
   constructor(
       public readonly element: HTMLElement) {
-    super((element.children[0]! as HTMLElement).
-      children[1]! as HTMLInputElement);
+    super(((element.children[0]! as HTMLElement).
+      children[1]! as HTMLSpanElement).
+      children[0]! as HTMLInputElement);
     this.remarks = element.children[1]! as HTMLOListElement;
   }
 
@@ -208,6 +210,13 @@ class Judgement extends TextField {
   }
 }
 
+function appendFill(
+    container: Element): HTMLSpanElement {
+  let fill = appendElement(htmlSpan, container);
+  fill.className = "fill";
+  return fill;
+}
+
 function appendRemark(
     container: Element,
     prev?: Element): Remark {
@@ -215,9 +224,10 @@ function appendRemark(
 
   appendMood(element);
 
-  let input = appendTextInput(element);
+  let fill = appendFill(element);
+  let input = appendTextInput(fill);
   input.setAttribute("onkeydown",
-    "remarkKeydown(event, this, this.parentNode);");
+    "remarkKeydown(event, this, this.parentNode.parentNode);");
   input.setAttribute("onkeyup",
     "keyup(event, this);");
 
@@ -254,12 +264,14 @@ function createJudgementHeader(
   let span = appendElement(htmlSpan, header);
   span.innerText = repeatString("#", depth);
 
+  let fill = appendFill(header);
+
   if (input) {
-    header.appendChild(input);
+    fill.appendChild(input);
   } else {
-    input = appendTextInput(header);
+    input = appendTextInput(fill);
     input.setAttribute("onkeydown",
-      "judgementKeydown(event, this, this.parentNode.parentNode);");
+      "judgementKeydown(event, this, this.parentNode.parentNode.parentNode);");
     input.setAttribute("onkeyup", "keyup(event, this);");
   }
 
@@ -462,7 +474,8 @@ function remarkKeydown(
   } else if (e.key === "Control") {
     ctrl = input;
   } else if (ctrl === input && e.code === "Space") {
-    toggleMood(input.previousSibling! as HTMLElement);
+    toggleMood((input.parentNode! as HTMLElement).
+      previousSibling! as HTMLElement);
   } else if (ctrl === input && e.key === "ArrowRight") {
     new Remark(remark).indent();
   } else if (ctrl === input && e.key === "ArrowLeft") {
