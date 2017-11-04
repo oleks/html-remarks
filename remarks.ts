@@ -150,7 +150,6 @@ class TextContainer {
 }
 
 function createJudgementHeader(
-    judgement_id: string,
     depth: number): TextContainer {
   let header = document.createElement("h" + depth);
 
@@ -159,7 +158,7 @@ function createJudgementHeader(
 
   let input = appendTextInput(header);
   input.setAttribute("onkeydown",
-    "judgementKeydown(\"" + judgement_id + "\", event, this);");
+    "judgementKeydown(event, this, this.parentNode.parentNode);");
   input.setAttribute("onkeyup", "keyup(event, this);");
 
   return new TextContainer(header, input);
@@ -171,7 +170,7 @@ function appendJudgement(
   let judgement = appendElement(htmlSection, container);
   judgement.id = Guid.next();
 
-  let header = createJudgementHeader(judgement.id, depth);
+  let header = createJudgementHeader(depth);
   judgement.appendChild(header.element());
 
   appendRemark(appendRemarks(judgement));
@@ -348,20 +347,18 @@ function remarkKeydown(
 }
 
 function judgementKeydown(
-    judgement_id: string,
     e: KeyboardEvent,
-    elem: HTMLElement): void {
-  let judgement = byId(judgement_id);
+    input: HTMLInputElement,
+    judgement: HTMLLIElement): void {
   if (e.code === "Enter") {
     appendJudgementAfter(judgement);
   } else if (e.key === "Control") {
-    ctrl = elem;
-  } else if (ctrl === elem && e.key === "ArrowUp") {
-    moveUp(judgement, elem);
-  } else if (ctrl === elem && e.key === "ArrowDown") {
-    moveDown(judgement, elem);
+    ctrl = input;
+  } else if (ctrl === input && e.key === "ArrowUp") {
+    moveUp(judgement, input);
+  } else if (ctrl === input && e.key === "ArrowDown") {
+    moveDown(judgement, input);
   }
-  elem = elem;
 }
 
 function keyup(
