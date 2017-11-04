@@ -4,4 +4,4 @@ set -eo pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cat ${dir}/../*.ts | sed 's/\(.\)/\1\n/g' | grep '!' | wc -l
+cat ${dir}/../*.ts | grep '![ .;]' | wc -l
