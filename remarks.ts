@@ -35,8 +35,25 @@ class Guid {
   }
 }
 
-function appendElement(tagName: string, container: Element): Element {
-  var element = document.createElement(tagName);
+function htmlSpan(): HTMLSpanElement {
+  return document.createElement("span");
+}
+
+function htmlInput(): HTMLInputElement {
+  return document.createElement("input");
+}
+
+function htmlOList(): HTMLOListElement {
+  return document.createElement("ol");
+}
+
+function htmlLI(): HTMLLIElement {
+  return document.createElement("li");
+}
+
+function appendElement<T extends HTMLElement>(
+    c: () => T, container: Element): T {
+  let element = c();
   container.appendChild(element);
   return element;
 }
@@ -46,7 +63,7 @@ function setValue(input: HTMLInputElement): void {
 }
 
 function appendTextInput(container: Element): HTMLInputElement {
-  let input = appendElement("input", container);
+  let input = appendElement(htmlInput, container);
   input.setAttribute("type", "text");
   input.setAttribute("onchange", "setValue(this);");
 
@@ -65,11 +82,11 @@ function insertElementAfter(
 }
 
 function appendRemarks(container: Element): Element {
-  return appendElement("ol", container);
+  return appendElement(htmlOList, container);
 }
 
 function appendMood(container: Element): void {
-  let span = appendElement("span", container) as HTMLSpanElement;
+  let span = appendElement(htmlSpan, container);
   span.className = "mood";
   span.innerText = "*";
   span.setAttribute("onclick", "toggleMood(this);");
