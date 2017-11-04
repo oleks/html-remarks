@@ -112,6 +112,10 @@ class TextField {
   focus(): void {
     this.input.focus();
   }
+
+  isEmpty(): boolean {
+    return this.input.value.length === 0;
+  }
 }
 
 class Remark extends TextField {
@@ -120,10 +124,6 @@ class Remark extends TextField {
   constructor(
       public readonly element: HTMLLIElement) {
     super(element.children[1]! as HTMLInputElement);
-  }
-
-  isEmpty(): boolean {
-    return this.input.value.length === 0;
   }
 
   tryRemove(e: KeyboardEvent): void {
@@ -186,7 +186,7 @@ class Judgement extends TextField {
   }
 
   isEmpty(): boolean {
-    return this.input.value.length === 0 &&
+    return super.isEmpty() &&
       this.remarks.children.length === 1 &&
         new Remark(this.remarks.children[0] as HTMLLIElement).isEmpty();
   }
