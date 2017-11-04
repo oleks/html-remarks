@@ -132,14 +132,14 @@ function appendJudgement(container: Element, depth: number): void {
   header.focus();
 }
 
-function getFilename() {
+function basename() {
   var parts = document.location.href.split("?")[0].split("/");
   var last = parts[parts.length - 1];
   return last.split(".html")[0];
 }
 
 function main(): void {
-  document.title = getFilename();
+  document.title = basename();
 
   var judgements = byId("judgements");
   if (judgements.children.length === 0) {
