@@ -103,20 +103,27 @@ function appendMood(
   span.setAttribute("onclick", "toggleMood(this);");
 }
 
-class Remark {
-  public readonly input: HTMLInputElement;
-
+class TextField {
   constructor(
-      public readonly element: HTMLLIElement) {
-    this.input = element.children[1]! as HTMLInputElement;
-  }
-
-  isEmpty(): boolean {
-    return this.input.value.length === 0;
+      public readonly input: HTMLInputElement) {
+    // The signature does all the work.
   }
 
   focus(): void {
     this.input.focus();
+  }
+}
+
+class Remark extends TextField {
+  public readonly input: HTMLInputElement;
+
+  constructor(
+      public readonly element: HTMLLIElement) {
+    super(element.children[1]! as HTMLInputElement);
+  }
+
+  isEmpty(): boolean {
+    return this.input.value.length === 0;
   }
 
   tryRemove(): void {
@@ -167,19 +174,15 @@ class Remark {
   }
 }
 
-class Judgement {
+class Judgement extends TextField {
   public readonly input: HTMLInputElement;
   public readonly remarks: HTMLOListElement;
 
   constructor(
       public readonly element: HTMLElement) {
-    let header = element.children[0]! as HTMLElement;
-    this.input = header.children[1]! as HTMLInputElement;
+    super((element.children[0]! as HTMLElement).
+      children[1]! as HTMLInputElement);
     this.remarks = element.children[1]! as HTMLOListElement;
-  }
-
-  focus(): void {
-    this.input.focus();
   }
 
   isEmpty(): boolean {
