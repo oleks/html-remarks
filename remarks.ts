@@ -277,6 +277,8 @@ function remarkKeydown(
     tryRemoveRemark(remark, input);
   } else if (e.key === "Control") {
     ctrl = input;
+  } else if (ctrl === input && e.code === "Space") {
+    toggleMood(input.previousSibling! as HTMLElement);
   } else if (ctrl === input && e.key === "ArrowUp") {
     moveUp(remark, input);
   } else if (ctrl === input && e.key === "ArrowDown") {
