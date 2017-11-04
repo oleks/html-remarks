@@ -5,22 +5,22 @@ function byId(
 
 function toggleMoodText(
     current_mood: string): string {
-  var next_mood: string;
+  var retval: string;
   switch (current_mood) {
   case "*":
-    next_mood = "+";
+    retval = "+";
     break;
   case "+":
-    next_mood = "-";
+    retval = "-";
     break;
   case "-":
-    next_mood = "?";
+    retval = "?";
     break;
   default:
-    next_mood = "*";
+    retval = "*";
     break;
   }
-  return next_mood;
+  return retval;
 }
 
 function toggleMood(
