@@ -13,6 +13,7 @@ set +e
 
 cat | bash - <<EOF
 set -euo pipefail
+make clean
 make
 git add -f remarks.html
 git commit -S -m 'Deploy'
