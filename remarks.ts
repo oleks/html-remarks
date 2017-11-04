@@ -105,7 +105,7 @@ function appendMood(
 
 function appendRemark(
     container: Element,
-    prev?: Element) {
+    prev?: Element): void {
   let remark = insertElementAfter(htmlLI, container, prev);
 
   appendMood(remark);
@@ -226,7 +226,7 @@ function getRemarks(elem: Element) : HTMLOListElement {
 
 function indentRemark(
     remark: HTMLLIElement,
-    input: HTMLInputElement) {
+    input: HTMLInputElement): void {
   let prev = remark.previousSibling;
   if (prev) {
     let remarks = getRemarks(prev as HTMLElement);
@@ -238,7 +238,7 @@ function indentRemark(
 
 function unindentRemark(
     remark: HTMLLIElement,
-    input: HTMLInputElement) {
+    input: HTMLInputElement): void {
   if (remark.parentNode &&
       remark.parentNode.parentNode &&
       remark.parentNode.parentNode.parentNode) {
@@ -357,11 +357,11 @@ function moveDown(
   }
 }
 
-function detach(elem: HTMLElement) {
+function detach(elem: HTMLElement): void {
   elem.parentNode!.removeChild(elem);
 }
 
-function detach2(elem: HTMLElement) {
+function detach2(elem: HTMLElement): void {
   let container = elem.parentNode!;
   detach(elem);
   if ((container as HTMLElement).children.length === 0) {
@@ -439,7 +439,7 @@ function keyup(
   }
 }
 
-function basename() {
+function basename(): string {
   let parts = document.location.href.split("?")[0].split("/");
   let last = parts[parts.length - 1];
   return last.split(".html")[0];
