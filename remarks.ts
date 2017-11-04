@@ -126,7 +126,7 @@ class Remark extends TextField {
     return this.input.value.length === 0;
   }
 
-  tryRemove(): void {
+  tryRemove(e: KeyboardEvent): void {
     if (!this.isEmpty()) {
       return;
     }
@@ -139,7 +139,7 @@ class Remark extends TextField {
     }
 
     detach(this.element);
-
+    e.preventDefault();
     new Remark(sibling as HTMLLIElement).focus();
   }
 
@@ -191,7 +191,7 @@ class Judgement extends TextField {
         new Remark(this.remarks.children[0] as HTMLLIElement).isEmpty();
   }
 
-  tryRemove(): void {
+  tryRemove(e: KeyboardEvent): void {
     if (!this.isEmpty()) {
       return;
     }
@@ -204,7 +204,7 @@ class Judgement extends TextField {
     }
 
     detach(this.element);
-
+    e.preventDefault();
     new Judgement(sibling as HTMLElement).focus();
   }
 }
@@ -459,7 +459,7 @@ function remarkKeydown(
     let container = remark.parentNode! as HTMLElement;
     appendRemark(container, remark);
   } else if (e.code === "Backspace") {
-    new Remark(remark).tryRemove();
+    new Remark(remark).tryRemove(e);
   } else if (e.key === "Control") {
     ctrl = input;
   } else if (ctrl === input && e.code === "Space") {
@@ -482,7 +482,7 @@ function judgementKeydown(
   if (e.code === "Enter") {
     appendJudgementAfter(judgement);
   } else if (e.code === "Backspace") {
-    new Judgement(judgement).tryRemove();
+    new Judgement(judgement).tryRemove(e);
   } else if (e.key === "Control") {
     ctrl = input;
   } else if (ctrl === input && e.key === "ArrowRight") {
