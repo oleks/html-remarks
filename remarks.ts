@@ -175,7 +175,6 @@ class Remark extends TextField {
 }
 
 class Judgement extends TextField {
-  public readonly input: HTMLInputElement;
   public readonly remarks: HTMLOListElement;
 
   constructor(
