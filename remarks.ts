@@ -151,9 +151,9 @@ class Remark {
     if (elem.parentNode &&
         elem.parentNode.parentNode &&
         elem.parentNode.parentNode.parentNode) {
-      let next = elem.parentNode!.parentNode!.nextSibling;
       let container = elem.parentNode!.parentNode!.parentNode! as HTMLElement;
       if (container instanceof HTMLOListElement) {
+        let next = elem.parentNode!.parentNode!.nextSibling;
         detach2(elem);
         if (next) {
           container.insertBefore(elem, next);
