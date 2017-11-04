@@ -138,13 +138,13 @@ class TextContainer {
 function createJudgementHeader(
     section_id: string,
     depth: number): TextContainer {
-  var header = document.createElement("h" + depth);
+  let header = document.createElement("h" + depth);
 
-  var span = document.createElement("span");
+  let span = document.createElement("span");
   span.innerText = repeatString("#", depth);
   header.appendChild(span);
 
-  var input = appendTextInput(header);
+  let input = appendTextInput(header);
 
   return new TextContainer(header, input);
 }
@@ -152,10 +152,10 @@ function createJudgementHeader(
 function appendJudgement(
     container: Element,
     depth: number): void {
-  var section = document.createElement("section");
+  let section = document.createElement("section");
   section.id = Guid.next();
 
-  var header = createJudgementHeader(section.id, depth);
+  let header = createJudgementHeader(section.id, depth);
   section.appendChild(header.element());
 
   appendRemark(appendRemarks(section));
@@ -165,15 +165,15 @@ function appendJudgement(
 }
 
 function basename() {
-  var parts = document.location.href.split("?")[0].split("/");
-  var last = parts[parts.length - 1];
+  let parts = document.location.href.split("?")[0].split("/");
+  let last = parts[parts.length - 1];
   return last.split(".html")[0];
 }
 
 function main(): void {
   document.title = basename();
 
-  var judgements = byId("judgements");
+  let judgements = byId("judgements");
   if (judgements.children.length === 0) {
     appendJudgement(judgements, 1);
   }
