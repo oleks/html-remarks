@@ -334,7 +334,6 @@ function unindentJudgement(
   input.focus();
 }
 
-
 function moveUp(
     elem: HTMLElement,
     focus: HTMLElement): void {
