@@ -31,15 +31,6 @@ function toggleMood(
   (elem.nextSibling! as HTMLElement).focus();
 }
 
-class Guid {
-  static offset: number = 0;
-  static next(): string {
-    let retval = "id" + this.offset;
-    this.offset = this.offset + 1;
-    return retval;
-  }
-}
-
 function htmlSection(): HTMLElement {
   return document.createElement("section");
 }
@@ -116,7 +107,6 @@ function appendRemark(
     container: Element,
     prev?: Element) {
   let remark = insertElementAfter(htmlLI, container, prev);
-  remark.id = Guid.next();
 
   appendMood(remark);
   let input = appendTextInput(remark);
@@ -168,7 +158,6 @@ function appendJudgement(
     container: Element,
     depth: number): void {
   let judgement = appendElement(htmlSection, container);
-  judgement.id = Guid.next();
 
   let header = createJudgementHeader(depth);
   judgement.appendChild(header.element());
