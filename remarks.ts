@@ -1,7 +1,7 @@
 var ctrl: HTMLElement | null;
 
 function byId(
-    id: string): Element {
+    id: string): HTMLElement {
   return document.getElementById(id)!;
 }
 
