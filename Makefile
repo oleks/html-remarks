@@ -7,14 +7,14 @@ TSCFLAGS=--strict \
 	--noImplicitReturns \
 	--noFallthroughCasesInSwitch
 
-all: tsremarks.html
+all: remarks.html
 
-tsremarks.html: tsremarks.tmpl.html LICENSE remarks.css remarks.js Makefile
+remarks.html: remarks.tmpl.html LICENSE remarks.css remarks.js Makefile
 	cpp $(CPPFLAGS) -P $< $@
 
-%.js: %.ts Makefile
+remarks.js: remarks.ts Makefile
 	tsc $(TSCFLAGS) $<
 
 clean:
-	rm remarks.js
-	rm tsremarks.html
+	rm *.js
+	rm remarks.html

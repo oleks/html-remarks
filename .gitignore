@@ -1,7 +1,6 @@
 *.js
 *.html
 !*.tmpl.html
-!remarks.html
 
 # Created by https://www.gitignore.io/api/vim,emacs
 
