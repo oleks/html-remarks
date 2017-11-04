@@ -23,6 +23,7 @@ function toggleMoodText(current_mood: string): string {
 
 function toggleMood(elem: HTMLElement): void {
   elem.innerText = toggleMoodText(elem.innerText);
+  (elem.nextSibling! as HTMLElement).focus();
 }
 
 function appendJudgement(container: Element, depth: number): void {
