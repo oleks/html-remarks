@@ -29,7 +29,15 @@ function appendJudgement(container: Element, depth: number): void {
   return;
 }
 
+function getFilename() {
+  var parts = document.location.href.split("?")[0].split("/");
+  var last = parts[parts.length - 1];
+  return last.split(".html")[0];
+}
+
 function main(): void {
+  document.title = getFilename();
+
   var judgements = byId("judgements");
   if (judgements.children.length === 0) {
     appendJudgement(judgements, 1);
