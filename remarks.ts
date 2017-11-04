@@ -1,3 +1,5 @@
+var ctrl: HTMLElement | null;
+
 function byId(
     id: string): Element {
   return document.getElementById(id)!;
@@ -40,6 +42,10 @@ class Guid {
 
 function htmlSection(): HTMLElement {
   return document.createElement("section");
+}
+
+function htmlDiv(): HTMLDivElement {
+  return document.createElement("div");
 }
 
 function htmlSpan(): HTMLSpanElement {
@@ -140,6 +146,7 @@ class TextContainer {
 }
 
 function createJudgementHeader(
+    judgement_id: string,
     depth: number): TextContainer {
   let header = document.createElement("h" + depth);
 
@@ -147,6 +154,9 @@ function createJudgementHeader(
   span.innerText = repeatString("#", depth);
 
   let input = appendTextInput(header);
+  input.setAttribute("onkeydown",
+    "judgementKeydown(\"" + judgement_id + "\", event, this);");
+  input.setAttribute("onkeyup", "keyup(event, this);");
 
   return new TextContainer(header, input);
 }
@@ -154,16 +164,71 @@ function createJudgementHeader(
 function appendJudgement(
     container: Element,
     depth: number): void {
-  let section = appendElement(htmlSection, container);
-  section.id = Guid.next();
+  let judgement = appendElement(htmlSection, container);
+  judgement.id = Guid.next();
 
-  let header = createJudgementHeader(depth);
-  section.appendChild(header.element());
+  let header = createJudgementHeader(judgement.id, depth);
+  judgement.appendChild(header.element());
 
-  appendRemark(appendRemarks(section));
+  appendRemark(appendRemarks(judgement));
 
-  container.appendChild(section);
   header.focus();
+}
+
+function lastChild(elem: Element): Element | null {
+  if (elem.children.length == 0) {
+    return null;
+  } else {
+    return elem.children[elem.children.length - 1];
+  }
+}
+
+function findJudgements(elem: Element): HTMLDivElement | null {
+  let candidate = lastChild(elem);
+  if (candidate instanceof HTMLDivElement) {
+    return candidate;
+  } else {
+    return null;
+  }
+}
+
+function getJudgements(elem: Element) : HTMLDivElement {
+  let judgements = findJudgements(elem);
+  if (judgements === null) {
+    judgements = appendJudgements(elem);
+  }
+  return judgements;
+}
+
+function appendJudgements(container: Element) : HTMLDivElement {
+  return appendElement(htmlDiv, container);
+}
+
+function appendJudgementAfter(judgement_id: string): void {
+  let judgement = byId(judgement_id);
+  let depth = parseInt(judgement.children[0].tagName.substring(1), 10);
+  let parent = judgement.parentNode! as HTMLElement;
+  appendJudgement(parent, depth);
+}
+
+function judgementKeydown(
+    judgement_id: string,
+    e: KeyboardEvent,
+    elem: HTMLElement): void {
+  if (e.code === "Enter") {
+    appendJudgementAfter(judgement_id);
+  } else if (e.key === "Control") {
+    ctrl = elem;
+  }
+  elem = elem;
+}
+
+function keyup(
+    e: KeyboardEvent,
+    elem: HTMLElement): void {
+  if (ctrl === elem && e.key === "Control") {
+    ctrl = null;
+  }
 }
 
 function basename() {
