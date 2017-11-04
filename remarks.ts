@@ -43,3 +43,5 @@ function main(): void {
     appendJudgement(judgements, 1);
   }
 }
+
+main();
