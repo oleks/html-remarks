@@ -243,6 +243,29 @@ function moveDown(
   }
 }
 
+function detach(elem: HTMLElement) {
+  elem.parentNode!.removeChild(elem);
+}
+
+function tryRemoveRemark(
+    remark: HTMLElement,
+    input: HTMLInputElement): void {
+  if (input.value.length > 0) {
+    return;
+  }
+
+  var sibling = remark.previousSibling;
+  if (sibling === null) {
+    sibling = remark.nextSibling;
+  }
+  if (sibling === null) {
+    return;
+  }
+
+  detach(remark);
+  ((sibling as HTMLElement).children[1] as HTMLElement).focus();
+}
+
 function remarkKeydown(
     e: KeyboardEvent,
     input: HTMLInputElement,
@@ -250,6 +273,8 @@ function remarkKeydown(
   if (e.code === "Enter") {
     let container = remark.parentNode! as HTMLElement;
     appendRemark(container, remark);
+  } else if (e.code === "Backspace") {
+    tryRemoveRemark(remark, input);
   } else if (e.key === "Control") {
     ctrl = input;
   } else if (ctrl === input && e.key === "ArrowUp") {
