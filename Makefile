@@ -28,5 +28,5 @@ remarks.js: remarks.ts Makefile
 	tsc $(TSCFLAGS) $<
 
 clean:
-	rm *.js
-	rm remarks.html
+	rm -f *.js
+	rm -f remarks.html
