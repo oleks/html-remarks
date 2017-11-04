@@ -210,8 +210,8 @@ function appendJudgements(container: Element) : HTMLDivElement {
 
 function appendJudgementAfter(judgement: HTMLElement): void {
   let depth = parseInt(judgement.children[0].tagName.substring(1), 10);
-  let parent = judgement.parentNode! as HTMLElement;
-  appendJudgement(parent, depth);
+  let container = judgement.parentNode! as HTMLElement;
+  appendJudgement(container, depth);
 }
 
 function moveUp(
