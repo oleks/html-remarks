@@ -173,7 +173,7 @@ function appendJudgement(
 }
 
 function lastChild(elem: Element): Element | null {
-  if (elem.children.length == 0) {
+  if (elem.children.length === 0) {
     return null;
   } else {
     return elem.children[elem.children.length - 1];
