@@ -1,0 +1,24 @@
+html input {
+  font-family: monospace;
+  font-size: 1.3em;
+}
+input {
+  border: 0;
+  border-bottom: 1px solid gray;
+}
+.mood {
+  cursor: pointer; cursor: hand;
+  padding: 0 0.5em;
+  font-size: 1.5em;
+  font-family: monospace;
+}
+h1 span, h2 span, h3 span, h4 span {
+  padding-right: 0.3em;
+}
+ol li {
+  list-style-type: none;
+}
+ol {
+  padding: 0;
+  padding-left: 1em;
+}
