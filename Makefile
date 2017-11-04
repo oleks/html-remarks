@@ -1,4 +1,6 @@
-CPPFLAGS=-Wall -pedantic -Werror
+CPPFLAGS=-Werror \
+	-Wall \
+	-pedantic
 TSCFLAGS=--strict \
 	--noImplicitAny \
 	--noImplicitThis \
