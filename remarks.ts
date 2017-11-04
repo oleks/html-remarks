@@ -140,16 +140,21 @@ class TextContainer {
 }
 
 function createJudgementHeader(
-    depth: number): TextContainer {
+    depth: number,
+    input?: HTMLInputElement): TextContainer {
   let header = document.createElement("h" + depth);
 
   let span = appendElement(htmlSpan, header);
   span.innerText = repeatString("#", depth);
 
-  let input = appendTextInput(header);
-  input.setAttribute("onkeydown",
-    "judgementKeydown(event, this, this.parentNode.parentNode);");
-  input.setAttribute("onkeyup", "keyup(event, this);");
+  if (input) {
+    header.appendChild(input);
+  } else {
+    input = appendTextInput(header);
+    input.setAttribute("onkeydown",
+      "judgementKeydown(event, this, this.parentNode.parentNode);");
+    input.setAttribute("onkeyup", "keyup(event, this);");
+  }
 
   return new TextContainer(header, input);
 }
@@ -251,6 +256,78 @@ function unindentRemark(
   }
 }
 
+function getJudgementDepth(
+    judgement: HTMLElement): number {
+  return parseInt(judgement.children[0].tagName.substring(1), 10);
+}
+
+function indentJudgementAux(
+    judgement: HTMLElement,
+    input: HTMLInputElement): void {
+  if (judgement.previousSibling === null) {
+    return;
+  }
+
+  let sibling = judgement.previousSibling as HTMLElement;
+
+  if (sibling.tagName !== "SECTION") {
+    return;
+  }
+
+  let judgements = getJudgements(sibling);
+  detach(judgement);
+  judgements.appendChild(judgement);
+
+  let depth = getJudgementDepth(judgement);
+  if (depth === 3) {
+    return;
+  }
+
+  let header = createJudgementHeader(depth + 1, input);
+  judgement.removeChild(judgement.children[0]);
+  judgement.insertBefore(header.element(), judgement.children[0]);
+}
+
+function indentJudgement(
+    judgement: HTMLElement,
+    input: HTMLInputElement): void {
+  indentJudgementAux(judgement, input);
+  input.focus();
+}
+
+function unindentJudgementAux(
+    judgement: HTMLElement,
+    input: HTMLInputElement): void {
+  let depth = getJudgementDepth(judgement);
+  if (depth === 1) {
+    return;
+  }
+
+  let container = judgement.parentNode!;
+  let parentJudgement = container.parentNode!;
+  let grandParent = parentJudgement.parentNode!;
+  let nextSibling = parentJudgement.nextSibling;
+
+  detach2(judgement);
+  if (nextSibling) {
+    grandParent.insertBefore(judgement, nextSibling);
+  } else {
+    grandParent.appendChild(judgement);
+  }
+
+  let header = createJudgementHeader(depth - 1, input);
+  judgement.removeChild(judgement.children[0]);
+  judgement.insertBefore(header.element(), judgement.children[0]);
+}
+
+function unindentJudgement(
+    judgement: HTMLElement,
+    input: HTMLInputElement): void {
+  unindentJudgementAux(judgement, input);
+  input.focus();
+}
+
+
 function moveUp(
     elem: HTMLElement,
     focus: HTMLElement): void {
@@ -343,6 +420,10 @@ function judgementKeydown(
     appendJudgementAfter(judgement);
   } else if (e.key === "Control") {
     ctrl = input;
+  } else if (ctrl === input && e.key === "ArrowRight") {
+    indentJudgement(judgement, input);
+  } else if (ctrl === input && e.key === "ArrowLeft") {
+    unindentJudgement(judgement, input);
   } else if (ctrl === input && e.key === "ArrowUp") {
     moveUp(judgement, input);
   } else if (ctrl === input && e.key === "ArrowDown") {
