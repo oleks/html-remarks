@@ -120,6 +120,10 @@ function appendRemark(
 
   appendMood(remark);
   let input = appendTextInput(remark);
+  input.setAttribute("onkeydown",
+    "remarkKeydown(event, this, this.parentNode);");
+  input.setAttribute("onkeyup",
+    "keyup(event, this);");
 
   input.focus();
 }
@@ -236,6 +240,22 @@ function moveDown(
       container.appendChild(elem);
     }
     focus.focus();
+  }
+}
+
+function remarkKeydown(
+    e: KeyboardEvent,
+    input: HTMLInputElement,
+    remark: HTMLLIElement): void {
+  if (e.code === "Enter") {
+    let container = remark.parentNode! as HTMLElement;
+    appendRemark(container, remark);
+  } else if (e.key === "Control") {
+    ctrl = input;
+  } else if (ctrl === input && e.key === "ArrowUp") {
+    moveUp(remark, input);
+  } else if (ctrl === input && e.key === "ArrowDown") {
+    moveDown(remark, input);
   }
 }
 
