@@ -15,3 +15,9 @@ but it proves a hassle to have people install software on their systems.
 * Mobile-first for students: When a remarks file is finalized for student view,
   this student view should be friendly for view on handheld devices (tablet, or
   mobile).
+
+## TypeScript Style Guide
+
+* Don't use `var` for non-variables, use `let`.
+* Don't use `document.createElement` without a wrapper function that hence
+  asserts a type for the created element.
