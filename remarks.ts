@@ -136,7 +136,6 @@ class TextContainer {
 }
 
 function createJudgementHeader(
-    section_id: string,
     depth: number): TextContainer {
   let header = document.createElement("h" + depth);
 
@@ -155,7 +154,7 @@ function appendJudgement(
   let section = document.createElement("section");
   section.id = Guid.next();
 
-  let header = createJudgementHeader(section.id, depth);
+  let header = createJudgementHeader(depth);
   section.appendChild(header.element());
 
   appendRemark(appendRemarks(section));
