@@ -167,6 +167,45 @@ class Remark {
   }
 }
 
+class Judgement {
+  public readonly input: HTMLInputElement;
+  public readonly remarks: HTMLOListElement;
+
+  constructor(
+      public readonly element: HTMLElement) {
+    let header = element.children[0]! as HTMLElement;
+    this.input = header.children[1]! as HTMLInputElement;
+    this.remarks = element.children[1]! as HTMLOListElement;
+  }
+
+  focus(): void {
+    this.input.focus();
+  }
+
+  isEmpty(): boolean {
+    return this.input.value.length === 0 &&
+      this.remarks.children.length === 1 &&
+        new Remark(this.remarks.children[0] as HTMLLIElement).isEmpty();
+  }
+
+  tryRemove(): void {
+    if (!this.isEmpty()) {
+      return;
+    }
+
+    let sibling = this.element.previousSibling ||
+      this.element.nextSibling;
+
+    if (sibling === null) {
+      return;
+    }
+
+    detach(this.element);
+
+    new Judgement(sibling as HTMLElement).focus();
+  }
+}
+
 function appendRemark(
     container: Element,
     prev?: Element): Remark {
@@ -439,6 +478,8 @@ function judgementKeydown(
     judgement: HTMLLIElement): void {
   if (e.code === "Enter") {
     appendJudgementAfter(judgement);
+  } else if (e.code === "Backspace") {
+    new Judgement(judgement).tryRemove();
   } else if (e.key === "Control") {
     ctrl = input;
   } else if (ctrl === input && e.key === "ArrowRight") {
