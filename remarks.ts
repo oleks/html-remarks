@@ -1,8 +1,10 @@
-function byId(id: string): Element {
+function byId(
+    id: string): Element {
   return document.getElementById(id)!;
 }
 
-function toggleMoodText(current_mood: string): string {
+function toggleMoodText(
+    current_mood: string): string {
   var next_mood: string;
   switch (current_mood) {
   case "*":
@@ -21,7 +23,8 @@ function toggleMoodText(current_mood: string): string {
   return next_mood;
 }
 
-function toggleMood(elem: HTMLElement): void {
+function toggleMood(
+    elem: HTMLElement): void {
   elem.innerText = toggleMoodText(elem.innerText);
   (elem.nextSibling! as HTMLElement).focus();
 }
@@ -52,17 +55,20 @@ function htmlLI(): HTMLLIElement {
 }
 
 function appendElement<T extends HTMLElement>(
-    c: () => T, container: Element): T {
+    c: () => T,
+    container: Element): T {
   let element = c();
   container.appendChild(element);
   return element;
 }
 
-function setValue(input: HTMLInputElement): void {
+function setValue(
+    input: HTMLInputElement): void {
   input.setAttribute("value", input.value);
 }
 
-function appendTextInput(container: Element): HTMLInputElement {
+function appendTextInput(
+    container: Element): HTMLInputElement {
   let input = appendElement(htmlInput, container);
   input.setAttribute("type", "text");
   input.setAttribute("onchange", "setValue(this);");
@@ -71,7 +77,9 @@ function appendTextInput(container: Element): HTMLInputElement {
 }
 
 function insertElementAfter(
-    tagName: string, container: Element, prev?: Element): Element {
+    tagName: string,
+    container: Element,
+    prev?: Element): Element {
   let element = document.createElement(tagName);
   if (prev && prev.nextSibling) {
     container.insertBefore(element, prev.nextSibling);
@@ -81,18 +89,22 @@ function insertElementAfter(
   return element;
 }
 
-function appendRemarks(container: Element): Element {
+function appendRemarks(
+    container: Element): Element {
   return appendElement(htmlOList, container);
 }
 
-function appendMood(container: Element): void {
+function appendMood(
+    container: Element): void {
   let span = appendElement(htmlSpan, container);
   span.className = "mood";
   span.innerText = "*";
   span.setAttribute("onclick", "toggleMood(this);");
 }
 
-function appendRemark(container: Element, prev?: Element) {
+function appendRemark(
+    container: Element,
+    prev?: Element) {
   let remark = insertElementAfter("li", container, prev);
   remark.id = Guid.next();
 
@@ -102,7 +114,9 @@ function appendRemark(container: Element, prev?: Element) {
   input.focus();
 }
 
-function repeatString(text: string, times: number): string {
+function repeatString(
+    text: string,
+    times: number): string {
   return Array(times + 1).join(text);
 }
 
@@ -121,8 +135,9 @@ class TextContainer {
   }
 }
 
-function createJudgementHeader(section_id: string, depth: number):
-    TextContainer {
+function createJudgementHeader(
+    section_id: string,
+    depth: number): TextContainer {
   var header = document.createElement("h" + depth);
 
   var span = document.createElement("span");
@@ -134,7 +149,9 @@ function createJudgementHeader(section_id: string, depth: number):
   return new TextContainer(header, input);
 }
 
-function appendJudgement(container: Element, depth: number): void {
+function appendJudgement(
+    container: Element,
+    depth: number): void {
   var section = document.createElement("section");
   section.id = Guid.next();
 
