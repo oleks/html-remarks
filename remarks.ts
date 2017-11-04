@@ -100,7 +100,7 @@ function appendTextInput(
 }
 
 function appendRemarks(
-    container: Element): Element {
+    container: Element): HTMLOListElement {
   return appendElement(htmlOList, container);
 }
 
@@ -214,6 +214,55 @@ function appendJudgementAfter(judgement: HTMLElement): void {
   appendJudgement(container, depth);
 }
 
+function findRemarks(elem: Element): HTMLOListElement | null {
+  let candidate = lastChild(elem);
+  if (candidate instanceof HTMLOListElement) {
+    return candidate;
+  } else {
+    return null;
+  }
+}
+
+function getRemarks(elem: Element) : HTMLOListElement {
+  let remarks = findRemarks(elem);
+  if (remarks === null) {
+    remarks = appendRemarks(elem);
+  }
+  return remarks;
+}
+
+function indentRemark(
+    remark: HTMLLIElement,
+    input: HTMLInputElement) {
+  let prev = remark.previousSibling;
+  if (prev) {
+    let remarks = getRemarks(prev as HTMLElement);
+    detach(remark);
+    remarks.appendChild(remark);
+    input.focus();
+  }
+}
+
+function unindentRemark(
+    remark: HTMLLIElement,
+    input: HTMLInputElement) {
+  if (remark.parentNode &&
+      remark.parentNode.parentNode &&
+      remark.parentNode.parentNode.parentNode) {
+    let next = remark.parentNode!.parentNode!.nextSibling;
+    let container = remark.parentNode!.parentNode!.parentNode! as HTMLElement;
+    if (container instanceof HTMLOListElement) {
+      detach2(remark);
+      if (next) {
+        container.insertBefore(remark, next);
+      } else {
+        container.appendChild(remark);
+      }
+      input.focus();
+    }
+  }
+}
+
 function moveUp(
     elem: HTMLElement,
     focus: HTMLElement): void {
@@ -245,6 +294,14 @@ function moveDown(
 
 function detach(elem: HTMLElement) {
   elem.parentNode!.removeChild(elem);
+}
+
+function detach2(elem: HTMLElement) {
+  let container = elem.parentNode!;
+  detach(elem);
+  if ((container as HTMLElement).children.length === 0) {
+    detach(container as HTMLElement);
+  }
 }
 
 function tryRemoveRemark(
@@ -279,6 +336,10 @@ function remarkKeydown(
     ctrl = input;
   } else if (ctrl === input && e.code === "Space") {
     toggleMood(input.previousSibling! as HTMLElement);
+  } else if (ctrl === input && e.key === "ArrowRight") {
+    indentRemark(remark, input);
+  } else if (ctrl === input && e.key === "ArrowLeft") {
+    unindentRemark(remark, input);
   } else if (ctrl === input && e.key === "ArrowUp") {
     moveUp(remark, input);
   } else if (ctrl === input && e.key === "ArrowDown") {
