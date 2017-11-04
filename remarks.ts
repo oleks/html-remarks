@@ -35,24 +35,22 @@ class Guid {
   }
 }
 
+function appendElement(tagName: string, container: Element): Element {
+  var element = document.createElement(tagName);
+  container.appendChild(element);
+  return element;
+}
+
 function setValue(input: HTMLInputElement): void {
   input.setAttribute("value", input.value);
 }
 
 function appendTextInput(container: Element): HTMLInputElement {
-  var input = document.createElement("input");
+  let input = appendElement("input", container);
   input.setAttribute("type", "text");
   input.setAttribute("onchange", "setValue(this);");
 
-  container.appendChild(input);
-
   return input;
-}
-
-function appendElement(tagName: string, container: Element): Element {
-  var element = document.createElement(tagName);
-  container.appendChild(element);
-  return element;
 }
 
 function insertElementAfter(
