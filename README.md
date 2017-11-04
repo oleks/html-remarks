@@ -21,3 +21,5 @@ but it proves a hassle to have people install software on their systems.
 * Don't use `var` for non-variables, use `let`.
 * Don't use `document.createElement` without a wrapper function that hence
   asserts a type for the created element.
+* Always use `===`.
+* Always specify the return type of a function (especially, if it is `void`).
