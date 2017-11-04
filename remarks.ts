@@ -172,7 +172,8 @@ function appendJudgement(
   header.focus();
 }
 
-function lastChild(elem: Element): Element | null {
+function lastChild(
+    elem: Element): Element | null {
   if (elem.children.length === 0) {
     return null;
   } else {
@@ -180,7 +181,8 @@ function lastChild(elem: Element): Element | null {
   }
 }
 
-function findJudgements(elem: Element): HTMLDivElement | null {
+function findJudgements(
+    elem: Element): HTMLDivElement | null {
   let candidate = lastChild(elem);
   if (candidate instanceof HTMLDivElement) {
     return candidate;
@@ -189,7 +191,8 @@ function findJudgements(elem: Element): HTMLDivElement | null {
   }
 }
 
-function getJudgements(elem: Element) : HTMLDivElement {
+function getJudgements(
+    elem: Element) : HTMLDivElement {
   let judgements = findJudgements(elem);
   if (judgements === null) {
     judgements = appendJudgements(elem);
@@ -197,17 +200,20 @@ function getJudgements(elem: Element) : HTMLDivElement {
   return judgements;
 }
 
-function appendJudgements(container: Element) : HTMLDivElement {
+function appendJudgements(
+    container: Element) : HTMLDivElement {
   return appendElement(htmlDiv, container);
 }
 
-function appendJudgementAfter(judgement: HTMLElement): void {
+function appendJudgementAfter(
+    judgement: HTMLElement): void {
   let depth = parseInt(judgement.children[0].tagName.substring(1), 10);
   let container = judgement.parentNode! as HTMLElement;
   appendJudgement(container, depth);
 }
 
-function findRemarks(elem: Element): HTMLOListElement | null {
+function findRemarks(
+    elem: Element): HTMLOListElement | null {
   let candidate = lastChild(elem);
   if (candidate instanceof HTMLOListElement) {
     return candidate;
@@ -216,7 +222,8 @@ function findRemarks(elem: Element): HTMLOListElement | null {
   }
 }
 
-function getRemarks(elem: Element) : HTMLOListElement {
+function getRemarks(
+    elem: Element) : HTMLOListElement {
   let remarks = findRemarks(elem);
   if (remarks === null) {
     remarks = appendRemarks(elem);
