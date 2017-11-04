@@ -103,19 +103,55 @@ function appendMood(
   span.setAttribute("onclick", "toggleMood(this);");
 }
 
+class Remark {
+  public readonly input: HTMLInputElement;
+
+  constructor(
+      public readonly element: HTMLLIElement) {
+    this.input = element.children[1]! as HTMLInputElement;
+  }
+
+  isEmpty(): boolean {
+    return this.input.value.length === 0;
+  }
+
+  focus(): void {
+    this.input.focus();
+  }
+
+  tryRemove(): void {
+    if (!this.isEmpty()) {
+      return;
+    }
+
+    let sibling = this.element.previousSibling ||
+      this.element.nextSibling;
+
+    if (sibling === null) {
+      return;
+    }
+
+    detach(this.element);
+
+    new Remark(sibling as HTMLLIElement).focus();
+  }
+}
+
 function appendRemark(
     container: Element,
-    prev?: Element): void {
-  let remark = insertElementAfter(htmlLI, container, prev);
+    prev?: Element): Remark {
+  let element = insertElementAfter(htmlLI, container, prev);
 
-  appendMood(remark);
-  let input = appendTextInput(remark);
+  appendMood(element);
+
+  let input = appendTextInput(element);
   input.setAttribute("onkeydown",
     "remarkKeydown(event, this, this.parentNode);");
   input.setAttribute("onkeyup",
     "keyup(event, this);");
 
   input.focus();
+  return new Remark(element);
 }
 
 function repeatString(
@@ -375,25 +411,6 @@ function detach2(elem: HTMLElement): void {
   }
 }
 
-function tryRemoveRemark(
-    remark: HTMLElement,
-    input: HTMLInputElement): void {
-  if (input.value.length > 0) {
-    return;
-  }
-
-  var sibling = remark.previousSibling;
-  if (sibling === null) {
-    sibling = remark.nextSibling;
-  }
-  if (sibling === null) {
-    return;
-  }
-
-  detach(remark);
-  ((sibling as HTMLElement).children[1] as HTMLElement).focus();
-}
-
 function remarkKeydown(
     e: KeyboardEvent,
     input: HTMLInputElement,
@@ -402,7 +419,7 @@ function remarkKeydown(
     let container = remark.parentNode! as HTMLElement;
     appendRemark(container, remark);
   } else if (e.code === "Backspace") {
-    tryRemoveRemark(remark, input);
+    new Remark(remark).tryRemove();
   } else if (e.key === "Control") {
     ctrl = input;
   } else if (ctrl === input && e.code === "Space") {
