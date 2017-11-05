@@ -256,6 +256,40 @@ class TextContainer {
   }
 }
 
+function setPoints(
+    input: HTMLInputElement): void {
+  setValue(input);
+}
+
+function setTotalPoints(
+    input: HTMLInputElement): void {
+  setValue(input);
+}
+
+function appendPoints(
+    container: HTMLElement): void {
+  let span = appendElement(htmlSpan, container);
+  span.className = "ps";
+
+  let prefix = appendElement(htmlSpan, span);
+  prefix.innerText = ":";
+
+  let setPoints = appendTextInput(span);
+  setPoints.className = "s";
+  setPoints.setAttribute("value", "50");
+  setPoints.setAttribute("onchange",
+    "setPoints(this);");
+
+  let sep = appendElement(htmlSpan, span);
+  sep.innerText = "/";
+
+  let totalPoints = appendTextInput(span);
+  totalPoints.className = "t";
+  totalPoints.setAttribute("value", "100");
+  totalPoints.setAttribute("onchange",
+    "setTotalPoints(this);");
+}
+
 function createJudgementHeader(
     depth: number,
     input?: HTMLInputElement): TextContainer {
@@ -274,6 +308,8 @@ function createJudgementHeader(
       "judgementKeydown(event, this, this.parentNode.parentNode.parentNode);");
     input.setAttribute("onkeyup", "keyup(event, this);");
   }
+
+  appendPoints(header);
 
   return new TextContainer(header, input);
 }
