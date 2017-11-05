@@ -210,11 +210,11 @@ class Judgement extends TextField {
   }
 }
 
-function appendFill(
+function appendFillCell(
     container: Element): HTMLSpanElement {
-  let fill = appendElement(htmlSpan, container);
-  fill.className = "fill";
-  return fill;
+  let fillCell = appendElement(htmlSpan, container);
+  fillCell.className = "fill";
+  return fillCell;
 }
 
 function appendRemark(
@@ -224,8 +224,8 @@ function appendRemark(
 
   appendMood(element);
 
-  let fill = appendFill(element);
-  let input = appendTextInput(fill);
+  let fillCell = appendFillCell(element);
+  let input = appendTextInput(fillCell);
   input.setAttribute("onkeydown",
     "remarkKeydown(event, this, this.parentNode.parentNode);");
   input.setAttribute("onkeyup",
@@ -264,12 +264,12 @@ function createJudgementHeader(
   let span = appendElement(htmlSpan, header);
   span.innerText = repeatString("#", depth);
 
-  let fill = appendFill(header);
+  let fillCell = appendFillCell(header);
 
   if (input) {
-    fill.appendChild(input);
+    fillCell.appendChild(input);
   } else {
-    input = appendTextInput(fill);
+    input = appendTextInput(fillCell);
     input.setAttribute("onkeydown",
       "judgementKeydown(event, this, this.parentNode.parentNode.parentNode);");
     input.setAttribute("onkeyup", "keyup(event, this);");
