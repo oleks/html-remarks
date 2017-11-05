@@ -316,8 +316,9 @@ function createJudgementHeader(
 
 function appendJudgement(
     container: Element,
-    depth: number): void {
-  let judgement = appendElement(htmlSection, container);
+    depth: number,
+    prev?: HTMLElement): void {
+  let judgement = insertElementAfter(htmlSection, container, prev);
 
   let header = createJudgementHeader(depth);
   judgement.appendChild(header.element());
@@ -364,7 +365,7 @@ function appendJudgementAfter(
     judgement: HTMLElement): void {
   let depth = parseInt(judgement.children[0].tagName.substring(1), 10);
   let container = judgement.parentNode! as HTMLElement;
-  appendJudgement(container, depth);
+  appendJudgement(container, depth, judgement);
 }
 
 function findRemarks(
