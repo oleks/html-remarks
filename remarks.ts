@@ -116,6 +116,10 @@ class TextField {
   isEmpty(): boolean {
     return this.input.value.length === 0;
   }
+
+  value(): string {
+    return this.input.value;
+  }
 }
 
 class Remark extends TextField {
