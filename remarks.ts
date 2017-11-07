@@ -561,6 +561,16 @@ function keyup(
   }
 }
 
+function exportJSON(): string {
+  let judgements = byId("judgements");
+  let data : string[] = [];
+  for (var i = 0; i < judgements.children.length; i++) {
+    let judgement = new Judgement(judgements.children[i] as HTMLElement);
+    data.push(JSON.stringify(judgement));
+  }
+  return JSON.stringify(data);
+}
+
 function basename(): string {
   let parts = document.location.href.split("?")[0].split("/");
   let last = parts[parts.length - 1];
