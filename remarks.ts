@@ -175,14 +175,23 @@ class Remark extends TextField {
   }
 }
 
-class Judgement extends TextField {
+class Headed extends TextField {
+  public readonly depth: number;
+
+  constructor(
+      public readonly heading: HTMLHeadingElement) {
+    super((heading.children[1]! as HTMLElement).
+      children[0]! as HTMLInputElement);
+    this.depth = parseInt(this.heading.tagName.substring(1), 10);
+  }
+}
+
+class Judgement extends Headed {
   public readonly remarks: HTMLOListElement;
 
   constructor(
       public readonly element: HTMLElement) {
-    super(((element.children[0]! as HTMLElement).
-      children[1]! as HTMLSpanElement).
-      children[0]! as HTMLInputElement);
+    super(element.children[0]! as HTMLHeadingElement);
     this.remarks = element.children[1]! as HTMLOListElement;
   }
 
@@ -387,11 +396,6 @@ function getRemarks(
   return remarks;
 }
 
-function getJudgementDepth(
-    judgement: HTMLElement): number {
-  return parseInt(judgement.children[0].tagName.substring(1), 10);
-}
-
 function indentJudgementAux(
     judgement: HTMLElement,
     input: HTMLInputElement): void {
@@ -409,7 +413,7 @@ function indentJudgementAux(
   detach(judgement);
   judgements.appendChild(judgement);
 
-  let depth = getJudgementDepth(judgement);
+  let depth = (new Judgement(judgement)).depth;
   if (depth === 3) {
     return;
   }
@@ -429,7 +433,7 @@ function indentJudgement(
 function unindentJudgementAux(
     judgement: HTMLElement,
     input: HTMLInputElement): void {
-  let depth = getJudgementDepth(judgement);
+  let depth = (new Judgement(judgement)).depth;
   if (depth === 1) {
     return;
   }
