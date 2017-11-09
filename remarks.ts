@@ -269,12 +269,12 @@ class TextContainer {
   }
 }
 
-function setPoints(
+function setGivenPoints(
     input: HTMLInputElement): void {
   setValue(input);
 }
 
-function setTotalPoints(
+function setMaxPoints(
     input: HTMLInputElement): void {
   setValue(input);
 }
@@ -287,20 +287,20 @@ function appendPoints(
   let prefix = appendElement(htmlSpan, span);
   prefix.innerText = ":";
 
-  let setPoints = appendTextInput(span);
-  setPoints.className = "s";
-  setPoints.setAttribute("value", "50");
-  setPoints.setAttribute("onchange",
-    "setPoints(this);");
+  let givenPoints = appendTextInput(span);
+  givenPoints.className = "s";
+  givenPoints.setAttribute("value", "50");
+  givenPoints.setAttribute("onchange",
+    "setGivenPoints(this);");
 
   let sep = appendElement(htmlSpan, span);
   sep.innerText = "/";
 
-  let totalPoints = appendTextInput(span);
-  totalPoints.className = "t";
-  totalPoints.setAttribute("value", "100");
-  totalPoints.setAttribute("onchange",
-    "setTotalPoints(this);");
+  let maxPoints = appendTextInput(span);
+  maxPoints.className = "t";
+  maxPoints.setAttribute("value", "100");
+  maxPoints.setAttribute("onchange",
+    "setMaxPoints(this);");
 }
 
 function createJudgementHeader(
