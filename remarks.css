@@ -39,3 +39,12 @@ ol {
   padding: 0;
   padding-left: 1em;
 }
+.key {
+  padding: 0.1em 0.2em;
+  color: #888;
+  border: 1px solid #888;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  cursor: pointer;
+}

@@ -567,6 +567,62 @@ function basename(): string {
   return last.split(".html")[0];
 }
 
+function appendDescr(
+    container: HTMLElement,
+    descr: string): void {
+  let descr_elem = appendElement(htmlSpan, container);
+  descr_elem.className = "descr";
+  descr_elem.innerText = descr + ":";
+}
+
+function appendKey(
+    container: HTMLElement,
+    key: string): void {
+  let key_elem = appendElement(htmlSpan, container);
+  key_elem.className = "key";
+  key_elem.innerText = key;
+}
+
+function appendText(
+    container: HTMLElement,
+    text: string): void {
+  container.innerHTML += text;
+}
+
+function addHelpEntry(
+    container: HTMLElement,
+    descr: string,
+    keys: string[]): void {
+  let entry = appendElement(htmlDiv, container);
+
+  appendDescr(entry, descr);
+
+  let keys_elem = appendElement(htmlSpan, entry);
+  keys_elem.className = "keys";
+
+  let last_ndx = keys.length - 1;
+  if (last_ndx >= 0) {
+    for (var i = 0; i< last_ndx; i++) {
+      appendKey(keys_elem, keys[i]);
+      appendText(keys_elem, '+');
+    }
+    appendKey(keys_elem, keys[last_ndx]);
+  }
+
+  keys = keys;
+}
+
+function addHelp(): void {
+  let help = byId("help");
+  addHelpEntry(help, "Save", ["Ctrl", "S"]);
+  addHelpEntry(help, "Go to next", ["Tab"]);
+  addHelpEntry(help, "Go to previous", ["Shift", "Tab"]);
+  addHelpEntry(help, "Indent Right", ["Ctrl", "→"]);
+  addHelpEntry(help, "Indent Left", ["Ctrl", "←"]);
+  addHelpEntry(help, "Move Up", ["Ctrl", "↑"]);
+  addHelpEntry(help, "Move Down", ["Ctrl", "↓"]);
+}
+
 function main(): void {
   document.title = basename();
 
@@ -574,6 +630,8 @@ function main(): void {
   if (judgements.children.length === 0) {
     appendJudgement(judgements, 1);
   }
+
+  addHelp();
 }
 
 main();
