@@ -615,12 +615,12 @@ function addHelpEntry(
 function addHelp(): void {
   let help = byId("help");
   addHelpEntry(help, "Save", ["Ctrl", "S"]);
-  addHelpEntry(help, "Go to next", ["Tab"]);
-  addHelpEntry(help, "Go to previous", ["Shift", "Tab"]);
-  addHelpEntry(help, "Indent Right", ["Ctrl", "→"]);
-  addHelpEntry(help, "Indent Left", ["Ctrl", "←"]);
-  addHelpEntry(help, "Move Up", ["Ctrl", "↑"]);
-  addHelpEntry(help, "Move Down", ["Ctrl", "↓"]);
+  addHelpEntry(help, "Go to next input", ["Tab"]);
+  addHelpEntry(help, "Go to previous input", ["Shift", "Tab"]);
+  addHelpEntry(help, "Indent element right", ["Ctrl", "→"]);
+  addHelpEntry(help, "Indent element left", ["Ctrl", "←"]);
+  addHelpEntry(help, "Move element up", ["Ctrl", "↑"]);
+  addHelpEntry(help, "Move element down", ["Ctrl", "↓"]);
 }
 
 function main(): void {
