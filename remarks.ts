@@ -594,6 +594,7 @@ function addHelpEntry(
     descr: string,
     keys: string[]): void {
   let entry = appendElement(htmlDiv, container);
+  entry.className = "help_e";
 
   appendDescr(entry, descr);
 
