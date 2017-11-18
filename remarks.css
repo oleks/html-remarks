@@ -39,6 +39,20 @@ ol {
   padding: 0;
   padding-left: 1em;
 }
+.help {
+  display: table;
+}
+.help_e {
+  display: table-row;
+  height: 1.6em;
+}
+.descr {
+  display: table-cell;
+  text-align: right;
+}
+.keys {
+  display: table-cell;
+}
 .key {
   padding: 0.1em 0.2em;
   color: #888;
