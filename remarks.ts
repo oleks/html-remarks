@@ -624,6 +624,11 @@ function addHelp(): void {
   addHelpEntry(help, "Move element down", ["Ctrl", "↓"]);
 }
 
+function showHelp(): void {
+  let popup = byId("help_popup");
+  popup.style.display = "inline";
+}
+
 function main(): void {
   document.title = basename();
 

@@ -39,6 +39,9 @@ ol {
   padding: 0;
   padding-left: 1em;
 }
+.help_popup {
+  display: none;
+}
 .help {
   display: table;
 }
