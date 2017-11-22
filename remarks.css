@@ -70,7 +70,7 @@ ol {
   border: 0.1em solid #fefefe;
   border-radius: 0.4em;
   -moz-border-radius: 0.4em;
-  -webkit-border-radius: 0.2em;
+  -webkit-border-radius: 0.4em;
 }
 .help_e {
   display: table-row;
