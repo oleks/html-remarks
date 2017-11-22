@@ -572,7 +572,7 @@ function appendDescr(
     descr: string): void {
   let descr_elem = appendElement(htmlSpan, container);
   descr_elem.className = "descr";
-  descr_elem.innerText = descr + ":";
+  descr_elem.innerHTML = descr + ":";
 }
 
 function appendKey(
@@ -622,6 +622,8 @@ function addHelp(): void {
   addHelpEntry(help, "Indent element left", ["Ctrl", "←"]);
   addHelpEntry(help, "Move element up", ["Ctrl", "↑"]);
   addHelpEntry(help, "Move element down", ["Ctrl", "↓"]);
+  addHelpEntry(help,
+    "Toggle mood (<tt>*/+/-/?</tt>)", ["Ctrl", "Space"]);
 }
 
 function helpKeydown(e: KeyboardEvent): void {
