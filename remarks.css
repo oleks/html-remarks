@@ -61,10 +61,10 @@ ol {
   margin: 0 0.2em;
   color: #fff;
   background: #aaa;
-  border: 1px solid #999;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
+  border: 0.1em solid #999;
+  border-radius: 0.2em;
+  -moz-border-radius: 0.2em;
+  -webkit-border-radius: 0.2em;
   font-family: monospace;
   font-weight: bold;
 }
