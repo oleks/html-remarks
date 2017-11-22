@@ -624,9 +624,22 @@ function addHelp(): void {
   addHelpEntry(help, "Move element down", ["Ctrl", "↓"]);
 }
 
+function helpKeydown(e: KeyboardEvent): void {
+  if (e.key === "Escape") {
+    hideHelp();
+  }
+}
+
 function showHelp(): void {
   let popup = byId("help_popup");
   popup.style.display = "inline";
+  document.addEventListener("keydown", helpKeydown);
+}
+
+function hideHelp(): void {
+  let popup = byId("help_popup");
+  popup.style.display = "none";
+  document.addEventListener("keydown", helpKeydown);
 }
 
 function main(): void {
