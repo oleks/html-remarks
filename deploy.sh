@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+./gitsync.sh
+
 # Use -B to keep gh-pages at most one commit ahead of master.
 # This leads to the use of -f when pushing to gh-pages on remote.
 # This might actually be one descent use of git push -f..
