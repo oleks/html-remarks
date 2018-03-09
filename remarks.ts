@@ -28,7 +28,7 @@ function toggleMoodText(
 function toggleMood(
     elem: HTMLElement): void {
   elem.innerText = toggleMoodText(elem.innerText);
-  (elem.nextSibling! as HTMLElement).focus();
+  (elem.nextElementSibling! as HTMLElement).focus();
 }
 
 function htmlSection(): HTMLElement {
@@ -55,11 +55,30 @@ function htmlLI(): HTMLLIElement {
   return document.createElement("li");
 }
 
+function linebreak(): Text {
+  return document.createTextNode("\n");
+}
+
+function appendChild(
+    container: Node,
+    element: Element): void {
+  container.appendChild(linebreak());
+  container.appendChild(element);
+}
+
+function insertBefore(
+    container: Node,
+    element: Element,
+    prev: Node): void {
+  container.insertBefore(element, prev);
+  container.insertBefore(linebreak(), prev);
+}
+
 function appendElement<T extends HTMLElement>(
     c: () => T,
     container: Element): T {
   let element = c();
-  container.appendChild(element);
+  appendChild(container, element);
   return element;
 }
 
@@ -68,10 +87,10 @@ function insertElementAfter<T extends HTMLElement>(
     container: Element,
     prev?: Element): T {
   let element = c();
-  if (prev && prev.nextSibling) {
-    container.insertBefore(element, prev.nextSibling);
+  if (prev && prev.nextElementSibling) {
+    insertBefore(container, element, prev.nextElementSibling);
   } else {
-    container.appendChild(element);
+    appendChild(container, element);
   }
   return element;
 }
@@ -134,8 +153,8 @@ class Remark extends TextField {
       return;
     }
 
-    let sibling = this.element.previousSibling ||
-      this.element.nextSibling;
+    let sibling = this.element.previousElementSibling ||
+      this.element.nextElementSibling;
 
     if (sibling === null) {
       return;
@@ -147,29 +166,29 @@ class Remark extends TextField {
   }
 
   indent(): void {
-    let prev = this.element.previousSibling;
+    let prev = this.element.previousElementSibling;
     if (prev) {
       let remarks = getRemarks(prev as HTMLElement);
       detach(this.element);
-      remarks.appendChild(this.element);
+      appendChild(remarks, this.element);
       this.input.focus();
     }
   }
 
   unindent(): void {
     let elem = this.element;
-    if (elem.parentNode &&
-        elem.parentNode.parentNode &&
-        elem.parentNode.parentNode.parentNode) {
-      let grandParent = elem.parentNode!.parentNode!;
-      let container = grandParent.parentNode! as HTMLElement;
+    if (elem.parentElement &&
+        elem.parentElement.parentElement &&
+        elem.parentElement.parentElement.parentElement) {
+      let grandParent = elem.parentElement!.parentElement!;
+      let container = grandParent.parentElement! as HTMLElement;
       if (container instanceof HTMLOListElement) {
-        let next = grandParent.nextSibling;
+        let next = grandParent.nextElementSibling;
         detach2(elem);
         if (next) {
-          container.insertBefore(elem, next);
+          insertBefore(container, elem, next);
         } else {
-          container.appendChild(elem);
+          appendChild(container, elem);
         }
         this.input.focus();
       }
@@ -208,8 +227,8 @@ class Judgement extends Headed {
       return;
     }
 
-    let sibling = this.element.previousSibling ||
-      this.element.nextSibling;
+    let sibling = this.element.previousElementSibling ||
+      this.element.nextElementSibling;
 
     if (sibling === null) {
       return;
@@ -238,7 +257,7 @@ function appendRemark(
   let fillCell = appendFillCell(element);
   let input = appendTextInput(fillCell);
   input.setAttribute("onkeydown",
-    "remarkKeydown(event, this, this.parentNode.parentNode);");
+    "remarkKeydown(event, this, this.parentElement.parentElement);");
   input.setAttribute("onkeyup",
     "keyup(event, this);");
 
@@ -312,11 +331,11 @@ function createJudgementHeader(
   let fillCell = appendFillCell(header);
 
   if (input) {
-    fillCell.appendChild(input);
+    appendChild(fillCell, input);
   } else {
     input = appendTextInput(fillCell);
     input.setAttribute("onkeydown",
-      "judgementKeydown(event, this, this.parentNode.parentNode.parentNode);");
+      "judgementKeydown(event, this, this.parentElement.parentElement.parentElement);");
     input.setAttribute("onkeyup", "keyup(event, this);");
   }
 
@@ -332,7 +351,7 @@ function appendJudgement(
   let judgement = insertElementAfter(htmlSection, container, prev);
 
   let header = createJudgementHeader(depth);
-  judgement.appendChild(header.element());
+  appendChild(judgement, header.element());
 
   appendRemark(appendRemarks(judgement));
 
@@ -375,7 +394,7 @@ function appendJudgements(
 function appendJudgementAfter(
     judgement: HTMLElement): void {
   let depth = parseInt(judgement.children[0].tagName.substring(1), 10);
-  let container = judgement.parentNode! as HTMLElement;
+  let container = judgement.parentElement! as HTMLElement;
   appendJudgement(container, depth, judgement);
 }
 
@@ -401,11 +420,11 @@ function getRemarks(
 function indentJudgementAux(
     judgement: HTMLElement,
     input: HTMLInputElement): void {
-  if (judgement.previousSibling === null) {
+  if (judgement.previousElementSibling === null) {
     return;
   }
 
-  let sibling = judgement.previousSibling as HTMLElement;
+  let sibling = judgement.previousElementSibling as HTMLElement;
 
   if (sibling.tagName !== "SECTION") {
     return;
@@ -413,7 +432,7 @@ function indentJudgementAux(
 
   let judgements = getJudgements(sibling);
   detach(judgement);
-  judgements.appendChild(judgement);
+  appendChild(judgements, judgement);
 
   let depth = (new Judgement(judgement)).depth;
   if (depth === 3) {
@@ -422,7 +441,7 @@ function indentJudgementAux(
 
   let header = createJudgementHeader(depth + 1, input);
   judgement.removeChild(judgement.children[0]);
-  judgement.insertBefore(header.element(), judgement.children[0]);
+  insertBefore(judgement, header.element(), judgement.children[0]);
 }
 
 function indentJudgement(
@@ -440,21 +459,21 @@ function unindentJudgementAux(
     return;
   }
 
-  let container = judgement.parentNode!;
-  let parentJudgement = container.parentNode!;
-  let grandParent = parentJudgement.parentNode!;
-  let nextSibling = parentJudgement.nextSibling;
+  let container = judgement.parentElement!;
+  let parentJudgement = container.parentElement!;
+  let grandParent = parentJudgement.parentElement!;
+  let nextElementSibling = parentJudgement.nextSibling;
 
   detach2(judgement);
-  if (nextSibling) {
-    grandParent.insertBefore(judgement, nextSibling);
+  if (nextElementSibling) {
+    insertBefore(grandParent, judgement, nextElementSibling);
   } else {
-    grandParent.appendChild(judgement);
+    appendChild(grandParent, judgement);
   }
 
   let header = createJudgementHeader(depth - 1, input);
   judgement.removeChild(judgement.children[0]);
-  judgement.insertBefore(header.element(), judgement.children[0]);
+  insertBefore(judgement, header.element(), judgement.children[0]);
 }
 
 function unindentJudgement(
@@ -467,11 +486,11 @@ function unindentJudgement(
 function moveUp(
     elem: HTMLElement,
     focus: HTMLElement): void {
-  let prev = elem.previousSibling;
+  let prev = elem.previousElementSibling;
   if (prev) {
-    let container = elem.parentNode!;
+    let container = elem.parentElement!;
     container.removeChild(elem);
-    container.insertBefore(elem, prev);
+    insertBefore(container, elem, prev);
     focus.focus();
   }
 }
@@ -479,26 +498,26 @@ function moveUp(
 function moveDown(
     elem: HTMLElement,
     focus: HTMLElement): void {
-  var next = elem.nextSibling;
+  var next = elem.nextElementSibling;
   if (next) {
-    let container = elem.parentNode!;
+    let container = elem.parentElement!;
     container.removeChild(elem);
-    let nextnext = next.nextSibling;
+    let nextnext = next.nextElementSibling;
     if (nextnext) {
-      container.insertBefore(elem, nextnext);
+      insertBefore(container, elem, nextnext);
     } else {
-      container.appendChild(elem);
+      appendChild(container, elem);
     }
     focus.focus();
   }
 }
 
 function detach(elem: HTMLElement): void {
-  elem.parentNode!.removeChild(elem);
+  elem.parentElement!.removeChild(elem);
 }
 
 function detach2(elem: HTMLElement): void {
-  let container = elem.parentNode!;
+  let container = elem.parentElement!;
   detach(elem);
   if ((container as HTMLElement).children.length === 0) {
     detach(container as HTMLElement);
@@ -510,15 +529,15 @@ function remarkKeydown(
     input: HTMLInputElement,
     remark: HTMLLIElement): void {
   if (e.code === "Enter") {
-    let container = remark.parentNode! as HTMLElement;
+    let container = remark.parentElement! as HTMLElement;
     appendRemark(container, remark);
   } else if (e.code === "Backspace") {
     new Remark(remark).tryRemove(e);
   } else if (e.key === "Control") {
     ctrl = input;
   } else if (ctrl === input && e.code === "Space") {
-    toggleMood((input.parentNode! as HTMLElement).
-      previousSibling! as HTMLElement);
+    toggleMood((input.parentElement! as HTMLElement).
+      previousElementSibling! as HTMLElement);
   } else if (ctrl === input && e.key === "ArrowRight") {
     new Remark(remark).indent();
   } else if (ctrl === input && e.key === "ArrowLeft") {
