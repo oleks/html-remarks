@@ -55,15 +55,40 @@ function htmlLI(): HTMLLIElement {
   return document.createElement("li");
 }
 
+function textNode(contents: string): Text {
+  return document.createTextNode(contents);
+}
+
 function linebreak(): Text {
-  return document.createTextNode("\n");
+  return textNode("\n");
+}
+
+function indent(
+    container: Node): Text {
+  let prev = container.previousSibling;
+  var indent = '';
+  if (prev && prev instanceof Text) {
+    let text = prev.wholeText;
+    let depth = text.split(' ').length;
+    indent = Array(depth + 2).join(' ');
+  }
+  return textNode(indent);
+}
+
+function finish(
+    container: Element): void {
+  container.appendChild(indent(container.parentNode!));
 }
 
 function appendChild(
     container: Node,
     element: Element): void {
-  container.appendChild(linebreak());
+  if (container.childNodes.length === 0) {
+    container.appendChild(linebreak());
+  }
+  container.appendChild(indent(container));
   container.appendChild(element);
+  container.appendChild(linebreak());
 }
 
 function insertBefore(
@@ -72,6 +97,7 @@ function insertBefore(
     prev: Node): void {
   container.insertBefore(element, prev);
   container.insertBefore(linebreak(), prev);
+  container.insertBefore(indent(container), prev);
 }
 
 function appendElement<T extends HTMLElement>(
@@ -260,6 +286,8 @@ function appendRemark(
     "remarkKeydown(event, this, this.parentElement.parentElement);");
   input.setAttribute("onkeyup",
     "keyup(event, this);");
+  finish(fillCell);
+  finish(element);
 
   input.focus();
   return new Remark(element);
@@ -271,10 +299,21 @@ function repeatString(
   return Array(times + 1).join(text);
 }
 
+class JudgementHeader {
+  constructor(
+      public readonly element: HTMLElement,
+      public readonly depth: number,
+      public readonly input?: HTMLInputElement) {
+    // The signature does all the work. 
+  }
+}
+
 class TextContainer {
   private container: Element;
   private text: HTMLInputElement;
-  constructor(container: Element, text: HTMLInputElement) {
+  constructor(
+      container: Element,
+      text: HTMLInputElement) {
     this.container = container;
     this.text = text;
   }
@@ -318,18 +357,27 @@ function appendPoints(
   maxPoints.setAttribute("value", "100");
   maxPoints.setAttribute("onchange",
     "setMaxPoints(this);");
+
+  finish(span);
 }
 
 function createJudgementHeader(
     depth: number,
-    input?: HTMLInputElement): TextContainer {
+    input?: HTMLInputElement): JudgementHeader {
   let header = document.createElement("h" + depth);
 
-  let span = appendElement(htmlSpan, header);
-  span.innerText = repeatString("#", depth);
+  return new JudgementHeader(header, depth, input);
+}
 
-  let fillCell = appendFillCell(header);
+function fillJudgementHeader(
+    header: JudgementHeader): TextContainer {
 
+  let span = appendElement(htmlSpan, header.element);
+  span.innerText = repeatString("#", header.depth);
+
+  let fillCell = appendFillCell(header.element);
+
+  var input = header.input;
   if (input) {
     appendChild(fillCell, input);
   } else {
@@ -338,10 +386,13 @@ function createJudgementHeader(
       "judgementKeydown(event, this, this.parentElement.parentElement.parentElement);");
     input.setAttribute("onkeyup", "keyup(event, this);");
   }
+  finish(fillCell);
 
-  appendPoints(header);
+  appendPoints(header.element);
 
-  return new TextContainer(header, input);
+  finish(header.element);
+
+  return new TextContainer(header.element, input);
 }
 
 function appendJudgement(
@@ -351,11 +402,16 @@ function appendJudgement(
   let judgement = insertElementAfter(htmlSection, container, prev);
 
   let header = createJudgementHeader(depth);
-  appendChild(judgement, header.element());
+  appendChild(judgement, header.element);
+  let textContainer = fillJudgementHeader(header);
 
-  appendRemark(appendRemarks(judgement));
+  let remarks = appendRemarks(judgement);
+  appendRemark(remarks);
 
-  header.focus();
+  finish(remarks);
+  finish(judgement);
+
+  textContainer.focus();
 }
 
 function lastChild(
@@ -441,7 +497,8 @@ function indentJudgementAux(
 
   let header = createJudgementHeader(depth + 1, input);
   judgement.removeChild(judgement.children[0]);
-  insertBefore(judgement, header.element(), judgement.children[0]);
+  insertBefore(judgement, header.element, judgement.children[0]);
+  fillJudgementHeader(header);
 }
 
 function indentJudgement(
@@ -473,7 +530,8 @@ function unindentJudgementAux(
 
   let header = createJudgementHeader(depth - 1, input);
   judgement.removeChild(judgement.children[0]);
-  insertBefore(judgement, header.element(), judgement.children[0]);
+  insertBefore(judgement, header.element, judgement.children[0]);
+  fillJudgementHeader(header);
 }
 
 function unindentJudgement(
@@ -603,7 +661,9 @@ function appendKey(
 function appendText(
     container: HTMLElement,
     text: string): void {
-  container.innerHTML += text;
+  container.appendChild(indent(container));
+  container.appendChild(textNode(text));
+  container.appendChild(linebreak());
 }
 
 function addHelpEntry(
@@ -626,6 +686,8 @@ function addHelpEntry(
     }
     appendKey(keys_elem, keys[last_ndx]);
   }
+  finish(keys_elem);
+  finish(entry);
 
   keys = keys;
 }
@@ -641,6 +703,7 @@ function addHelp(): void {
   addHelpEntry(help, "Move element down", ["Ctrl", "↓"]);
   addHelpEntry(help,
     "Toggle mood (<tt>*/+/-/?</tt>)", ["Ctrl", "Space"]);
+  finish(help);
 }
 
 function helpKeydown(e: KeyboardEvent): void {
@@ -666,6 +729,8 @@ function main(): void {
 
   let judgements = byId("judgements");
   if (judgements.children.length === 0) {
+    judgements.appendChild(linebreak());
+    judgements.appendChild(textNode("  "));
     appendJudgement(judgements, 1);
   }
 
