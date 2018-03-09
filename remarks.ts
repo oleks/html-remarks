@@ -123,8 +123,6 @@ class TextField {
 }
 
 class Remark extends TextField {
-  public readonly input: HTMLInputElement;
-
   constructor(
       public readonly element: HTMLLIElement) {
     super((element.children[1]! as HTMLSpanElement).
