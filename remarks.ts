@@ -5,6 +5,11 @@ function byId(
   return document.getElementById(id)!;
 }
 
+function empty(
+    e: Element): boolean {
+  return e.children.length === 0;
+}
+
 function toggleMoodText(
     current_mood: string): string {
   var retval: string;
@@ -416,7 +421,7 @@ function appendJudgement(
 
 function lastChild(
     elem: Element): Element | null {
-  if (elem.children.length === 0) {
+  if (empty(elem)) {
     return null;
   } else {
     return elem.children[elem.children.length - 1];
@@ -577,7 +582,7 @@ function detach(elem: HTMLElement): void {
 function detach2(elem: HTMLElement): void {
   let container = elem.parentElement!;
   detach(elem);
-  if ((container as HTMLElement).children.length === 0) {
+  if (empty(container as Element)) {
     detach(container as HTMLElement);
   }
 }
@@ -728,7 +733,7 @@ function main(): void {
   document.title = basename();
 
   let judgements = byId("judgements");
-  if (judgements.children.length === 0) {
+  if (empty(judgements)) {
     judgements.appendChild(linebreak());
     judgements.appendChild(textNode("  "));
     appendJudgement(judgements, 1);
