@@ -732,9 +732,9 @@ function main(): void {
     judgements.appendChild(linebreak());
     judgements.appendChild(textNode("  "));
     appendJudgement(judgements, 1);
-  }
 
-  addHelp();
+    addHelp();
+  }
 }
 
 main();
