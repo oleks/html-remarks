@@ -60,6 +60,10 @@ function htmlLI(): HTMLLIElement {
   return document.createElement("li");
 }
 
+function htmlLabel(): HTMLElement {
+  return document.createElement("label");
+}
+
 function textNode(contents: string): Text {
   return document.createTextNode(contents);
 }
@@ -103,6 +107,14 @@ function insertBefore(
   container.insertBefore(element, prev);
   container.insertBefore(linebreak(), prev);
   container.insertBefore(indent(container), prev);
+}
+
+function replace(
+    orig: Node,
+    repl: Element): void {
+  var container = orig.parentNode!;
+  insertBefore(container, repl, orig);
+  container.removeChild(orig);
 }
 
 function appendElement<T extends HTMLElement>(
@@ -727,6 +739,29 @@ function hideHelp(): void {
   let popup = byId("help_popup");
   popup.style.display = "none";
   document.addEventListener("keydown", helpKeydown);
+}
+
+function flatten(): void {
+  detach(byId("controls"));
+  detach(byId("help_popup"));
+
+  var inputs = document.querySelectorAll('input');
+  for (var i = 0; i < inputs.length; i++) {
+    var elem = inputs[i];
+    var label = htmlLabel();
+    label.innerText = elem.value;
+    replace(elem, label);
+  }
+
+  var scripts = document.querySelectorAll('script');
+  for (var i = 0; i < scripts.length; i++) {
+    detach(scripts[i]);
+  }
+
+  var moods = document.querySelectorAll('span[class="mood"]');
+  for (var i = 0; i < moods.length; i++) {
+    moods[i].removeAttribute("onclick");
+  }
 }
 
 function main(): void {
