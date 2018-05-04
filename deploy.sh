@@ -17,7 +17,8 @@ cat | bash - <<EOF
 set -euo pipefail
 make clean
 make
-git add -f remarks.html
+cp output/remarks.html .
+git add remarks.html
 git commit -S -m 'Deploy'
 git push -f origin gh-pages
 EOF
