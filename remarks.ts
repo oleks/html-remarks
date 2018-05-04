@@ -741,6 +741,19 @@ function hideHelp(): void {
   document.addEventListener("keydown", helpKeydown);
 }
 
+function flattenRemarks(): void {
+  var lis = document.querySelectorAll('li');
+  for (var i = 0; i < lis.length; i++) {
+    var label = lis[i].children[1]!.children[0]! as HTMLLabelElement;
+    if (label.innerText.length === 0) {
+      detach(lis[i]);
+    } else {
+      var mood = lis[i].children[0]! as HTMLSpanElement;
+      mood.removeAttribute("onclick");
+    }
+  }
+}
+
 function flatten(): void {
   detach(byId("controls"));
   detach(byId("help_popup"));
@@ -758,10 +771,7 @@ function flatten(): void {
     detach(scripts[i]);
   }
 
-  var moods = document.querySelectorAll('span[class="mood"]');
-  for (var i = 0; i < moods.length; i++) {
-    moods[i].removeAttribute("onclick");
-  }
+  flattenRemarks();
 }
 
 function main(): void {
