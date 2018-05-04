@@ -741,6 +741,23 @@ function hideHelp(): void {
   document.addEventListener("keydown", helpKeydown);
 }
 
+function flattenJudgements(): void {
+  var inputs = document.querySelectorAll('input');
+  for (var i = 0; i < inputs.length; i++) {
+    var elem = inputs[i];
+    var label = htmlLabel();
+    label.innerText = elem.value;
+    replace(elem, label);
+  }
+}
+
+function removeScripts(): void {
+  var scripts = document.querySelectorAll('script');
+  for (var i = 0; i < scripts.length; i++) {
+    detach(scripts[i]);
+  }
+}
+
 function flattenRemarks(): void {
   var lis = document.querySelectorAll('li');
   for (var i = 0; i < lis.length; i++) {
@@ -758,19 +775,8 @@ function flatten(): void {
   detach(byId("controls"));
   detach(byId("help_popup"));
 
-  var inputs = document.querySelectorAll('input');
-  for (var i = 0; i < inputs.length; i++) {
-    var elem = inputs[i];
-    var label = htmlLabel();
-    label.innerText = elem.value;
-    replace(elem, label);
-  }
-
-  var scripts = document.querySelectorAll('script');
-  for (var i = 0; i < scripts.length; i++) {
-    detach(scripts[i]);
-  }
-
+  removeScripts();
+  flattenJudgements();
   flattenRemarks();
 }
 
